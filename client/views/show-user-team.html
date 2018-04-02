@@ -1,0 +1,46 @@
+<div class="box">
+	<div ng-repeat="member in loggedInUser.teamMembers" style="width: 300px;border: 1px solid red;display: block;margin: 5px;"
+		ng-attr-id="member_box">
+		<div class="imgcontainer">
+			<object data="images/missing.jpg" type="image">
+			    <img src="images/player-image/{{member.pid}}.jpg" class="avatar"/>
+			</object>
+	    </div>
+		<div>
+			<div>
+			    <p style="font-size: 18px;text-align: -webkit-center;font-weight: bold;font-color: grey;" class="ng-binding">{{member.name}}
+			</p>
+			 </div>
+			 <div>
+			    <p style="font-size: 18px;text-align: -webkit-center;font-weight: bold;font-color: grey;" class="ng-binding">{{member.country}}</p>
+			 </div>
+			 <div>
+			    <p style="font-size: 18px;text-align: -webkit-center;font-weight: bold;font-color: grey;" class="ng-binding">{{member.playingRole}}</p>
+			 </div>
+			<!-- <div>
+				<table class="table">					
+					<tr>
+						<td>Nationality</td>
+						<td>{{  selectedTeamMember.country }}</td>
+					</tr>
+					<tr>
+						<td>Role</td>
+						<td>{{ selectedTeamMember.playingRole}}</td>
+					</tr>
+				</table>
+			</div>  -->
+		</div>
+
+	</div>
+</div>
+
+<!-- <div class="box" style="border:1px solid black;">
+          <div style="border:1px solid red;">One</div>
+          <div style="border:1px solid red;">Two</div>
+          <div style="border:1px solid red;">Three
+              <br>has
+              <br>extra
+              <br>text
+          </div>
+          <div style="border:1px solid red;">Four</div>
+        </div> -->

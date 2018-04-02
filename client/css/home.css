@@ -1,0 +1,121 @@
+.toolbar-position {
+	position: absolute;
+    right: 4px;
+    top: 9px;
+}
+
+.scrollable {
+	overflow-y: scroll;
+	max-height: 454px;   
+}
+
+.shadow {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.batsman-icon1 {
+	background-image: url('../images/icons/if_Cricket_71198.png');
+	border: 2px solid black;
+    height: 150px;
+    width: 120px;
+    position: absolute;
+    background-repeat: no-repeat;
+
+}
+
+.player-icon{
+	height: 35px;
+    width: 35px;
+    position: absolute;
+    right: 20px;
+    top: -15px;
+}
+
+.bowler-icon {
+	height: 20px;
+    width: 20px;
+    position: absolute;
+    right: 15px;
+    top: -2px;
+}
+
+.foregin-player-icon {
+    height: 20px;
+    width: 26px;
+    @position: relative;
+    position: absolute;
+    right: 5px;
+}
+
+.keeper-player-icon {
+    height: 20px;
+    width: 26px;
+    position: absolute;
+    right: 25px;
+}
+
+.header {
+	background-color: #239d60;
+	box-shadow: 0 1px 4px 0 rgba(0,0,0,0.2);
+	color: white;
+	padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+
+}
+
+.footer {
+	padding: 10px 15px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+	background-color: #239d60;
+	box-shadow: 0 1px 4px 0 rgba(0,0,0,0.2);
+	color: white;
+}
+
+.header-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 16px;
+    color: inherit;
+}
+
+.submit-row {
+	margin-bottom: 10px;
+}
+
+.navlinks{
+	list-style-type: none;
+    padding: 8px;
+    margin-left: 10px;
+}
+
+a {
+	color:white !important;
+}
+
+
+.invalid {
+    border: 1px solid red;
+}
+
+.bar-success {
+    background-color: #239d60;
+}
+
+.overseas-player {
+    background-position: -467px -150px;
+    background-image: url('images/global-icons.png');
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border:1px solid red;
+}
+
+.user-team-list-player-icon {
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    right: 35px;
+    top: 10px
+}
