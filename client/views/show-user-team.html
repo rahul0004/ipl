@@ -1,5 +1,5 @@
 <div class="box">
-	<div ng-repeat="member in loggedInUser.teamMembers" style="width: 300px;border: 1px solid red;display: block;margin: 5px;"
+	<div ng-repeat="member in loggedInUser.teamMembers" class="bg-success shadow" style="width: 300px;display: block;margin: 5px;"
 		ng-attr-id="member_box">
 		<div class="imgcontainer">
 			<object data="images/missing.jpg" type="image">
@@ -8,15 +8,33 @@
 	    </div>
 		<div>
 			<div>
-			    <p style="font-size: 18px;text-align: -webkit-center;font-weight: bold;font-color: grey;" class="ng-binding">{{member.name}}
-			</p>
+			    <div style="font-size: 18px;text-align: -webkit-center;font-weight: bold;font-color: grey;margin: 5px 0px;" class="ng-binding">{{member.name}}
+			    	<span ng-if="(member.country.toLowerCase().indexOf('india') === -1)"><img src="images/icons/overseas.png" 
+						style="height: 27px; width: 31px;"/></span>
+					<span ng-if="isSelectedPlayerIsBowler(member) === true">
+                        <img src="images/icons/ball.png" style="height: 20px;width: 20px;position: inherit;" />
+                    </span>
+                    <span ng-if="isSelectedPlayerIsBatsman(member) === true">
+                        <img src="images/icons/bat.png" style="height: 30px;width: 30px;position: inherit;" />
+                    </span>
+                    <span ng-if="isSelectedPlayerIsAllrounder(member) === true">
+                        <img src="images/icons/allrounder.png" style="height: 30px;width: 27px;position: inherit;" />
+                    </span>
+                    <span ng-if="(member.playingRole.toLowerCase().indexOf('wicketkeeper') != -1)"><img src="images/icons/keeping-gloves.png" 
+                        style="height: 27px; width: 31px;position: inherit;"/></span> 
+				</div>
 			 </div>
 			 <div>
+			 	<div style="font-size: 18px;text-align: -webkit-center;font-weight: bold;font-color: grey;margin: 5px 0px;">
+			 		Points Scored: {{member.pointsScored}} 22
+			 	</div>
+			 </div>	
+			<!--  <div>
 			    <p style="font-size: 18px;text-align: -webkit-center;font-weight: bold;font-color: grey;" class="ng-binding">{{member.country}}</p>
 			 </div>
 			 <div>
 			    <p style="font-size: 18px;text-align: -webkit-center;font-weight: bold;font-color: grey;" class="ng-binding">{{member.playingRole}}</p>
-			 </div>
+			 </div> -->
 			<!-- <div>
 				<table class="table">					
 					<tr>
