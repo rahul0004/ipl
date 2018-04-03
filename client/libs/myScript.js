@@ -11,16 +11,36 @@ app.controller("listCtrl", function($scope, $http, $window, $timeout, $state, $u
 
     $scope.submitMyTeam = function() {
         console.log("selected team",  $scope.loggedInUser.teamMembers);
-        if($scope.validateAddedPlayer()) {
-            console.log("call api and save in db ");
-            $http.post('libs/mockData/user.htm', $scope.loggedInUser).then(function onSuccess(response){
-                console.log("onSuccess ", response);
-            }, function onError(response){
-                console.log("onError ", response);
-            });
-        } else {
-            console.log("show error");
-        }
+        var options = {};
+        var modalInstance = $uibModal.open({
+            templateUrl:'views/submit-team-confirmation-popup.html',
+            controller:'SubmitTeamModalCtrl',
+            size:'sm',
+            resolve: {
+                options: function(){
+                    return options;
+                }
+            }
+        });
+
+        modalInstance.result.then(function(){
+            if($scope.validateAddedPlayer()) {
+                $http.post('libs/mockData/user.htm', $scope.loggedInUser).then(function onSuccess(response){
+                    //console.log("onSuccess ", response);
+                    toastr.success('Team is saved successfully', {closeButton: true});
+                }, function onError(response){
+                    console.log("onError ", response);
+                    toastr.error('Failed to save the team', 'Error', {closeButton: true});
+                });
+            } else {
+                //console.log("show error");
+                toastr.error('Failed to save the team', 'Error', {closeButton: true});
+            }
+            
+            
+        }, function(){
+            //console.log('modal is dismissed');
+        });        
     };
 	
 	$scope.validateAddedPlayer = function() {
@@ -210,7 +230,7 @@ app.controller("listCtrl", function($scope, $http, $window, $timeout, $state, $u
     $scope.removeConfirmation = function(selectedTeamMember, $index) {
         var modalInstance = $uibModal.open({
             templateUrl:'views/remove-player-confirmation-popup.html',
-            controller:'ModalCtrl',
+            controller:'RemovePlayerModalCtrl',
             size:'sm',
             resolve: {
                 selectedPlayer: function(){

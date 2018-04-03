@@ -1,6 +1,6 @@
 var app = angular.module("ipl");
 
-app.controller("ModalCtrl", function($scope, $uibModalInstance, selectedPlayer){
+app.controller("RemovePlayerModalCtrl", function($scope, $uibModalInstance, selectedPlayer){
 
     $scope.selectedPlayer = angular.copy(selectedPlayer);
 
