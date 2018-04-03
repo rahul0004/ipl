@@ -60,6 +60,16 @@ var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"]
               numberOfPlayersAllowed:11
           };
 
+          $scope.validateUserTeamCriteria = {
+              batsmen: false, 
+                bowlers: false, 
+                allrounders: false, 
+                foreginPlayers: false, 
+                uncappedPlayers: false, 
+                wicketkeeper: false,
+                numberOfPlayers:false
+          };
+
           $scope.loggedInUser = {
               id: 3,
               email: "rahul@abc.com",

@@ -9,16 +9,6 @@ app.controller("listCtrl", function($scope, $http, $window, $timeout, $state, $u
     // 58 header + 20 margin, 35 messages 40 footer, 34 sumit line  
     $scope.scrollableHeight = (768 - 78 - 20 - 35 - 40 -34) + 'px';
 
-    $scope.validateUserTeamCriteria = {
-        batsmen: false, 
-          bowlers: false, 
-          allrounders: false, 
-          foreginPlayers: false, 
-          uncappedPlayers: false, 
-          wicketkeeper: false,
-          numberOfPlayers:false
-    };
-
     $scope.submitMyTeam = function() {
         console.log("selected team",  $scope.loggedInUser.teamMembers);
         if($scope.validateAddedPlayer()) {
