@@ -1,7 +1,7 @@
 var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"])
         .config(function($stateProvider, $urlMatcherFactoryProvider,$urlRouterProvider,$locationProvider) {
           $urlMatcherFactoryProvider.caseInsensitive(true);
-          $urlRouterProvider.otherwise("/add");
+          //$urlRouterProvider.otherwise("/add");
           $locationProvider.html5Mode(true);
             $stateProvider
               .state("add", {
@@ -32,14 +32,28 @@ var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"]
           });
         });
 
-        app.controller("MainCtrl", function($scope, $http, $window){
+        app.controller("MainCtrl", function($scope, $http, $window, $state){
 
           $scope.logout = function() {
             window.location.href = '/user/logout';
           }
 
-          //$scope.currentDate = new Date();
-          $scope.currentDate = new Date('2018-04-12T14:30:00.000Z');
+          $scope.currentDate = new Date();
+          //$scope.currentDate = new Date('2018-04-12T14:30:00.000Z');
+
+          //new Date(year, month, day, hours, minutes, seconds, milliseconds)
+          // month starts from 0-11  
+          $scope.config = {
+            lastDateForTeamSelection: new Date(2018, 03, 07, 18, 00, 00, 00)
+          }
+
+          if($scope.currentDate.getTime() > $scope.config.lastDateForTeamSelection.getTime()) {
+            //user can not add or modify team from now
+            // below logic is whenever user comes on team selection page redirect user to view team page 
+            $state.go('view');
+          } else {
+            $state.go('add');
+          }
 
           $scope.loggedInUser = {};
           $scope.players = [];
@@ -70,16 +84,9 @@ var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"]
                 numberOfPlayers:false
           };
 
-          $scope.loggedInUser = {
-              id: 3,
-              email: "rahul@abc.com",
-              position: 4,
-              allowedTypes: ['batsman', 'bowler', 'allrounder'],
-              max: 11,
-              teamMembers: [      
-              ]
-          };
+          $scope.loggedInUser = {"id":3,"email":"rahul@abc.com","position":4,"teamMembers":[{"pid":"30045","country":"India","pointsScored":"","playingRole":"Wicketkeeper batsman","majorTeams":"","name":"Dinesh Karthik","battingStyle":"Right-hand bat","bowlingStyle":null,"category":"Capped","iplTeamName":"KOLKATA KNIGHT RIDERS"},{"pid":"35582","country":"India","pointsScored":"","playingRole":"Batsman","majorTeams":"","name":"Robin Uthappa","battingStyle":"Right-hand bat","bowlingStyle":"Right-arm medium","category":"Capped","iplTeamName":"KOLKATA KNIGHT RIDERS"},{"pid":"230558","country":"West Indies","pointsScored":"","playingRole":"Bowler","majorTeams":"","name":"Sunil Narine","battingStyle":"Left-hand bat","bowlingStyle":"Right-arm offbreak","category":"Foreign","iplTeamName":"KOLKATA KNIGHT RIDERS"},{"pid":"311592","country":"Australia","pointsScored":"","playingRole":"Bowler","majorTeams":"","name":"Mitchell Starc","battingStyle":"Left-hand bat","bowlingStyle":"Left-arm fast","category":"Foreign","iplTeamName":"KOLKATA KNIGHT RIDERS"},{"pid":"234675","country":"India","pointsScored":"","playingRole":"Allrounder","majorTeams":"","name":"Ravindra Jadeja","battingStyle":"Left-hand bat","bowlingStyle":"Slow left-arm orthodox","category":"Capped","iplTeamName":"CHENNAI SUPER KINGS"},{"pid":"502714","country":"New Zealand","pointsScored":"","playingRole":"Bowling allrounder","majorTeams":"","name":"Mitchell Santner","battingStyle":"Left-hand bat","bowlingStyle":"Slow left-arm orthodox","category":"Foreign","iplTeamName":"CHENNAI SUPER KINGS"},{"pid":"723105","country":"India","pointsScored":"","playingRole":"Batsman","majorTeams":"","name":"Rinku Singh","battingStyle":"Left-hand bat","bowlingStyle":"Right-arm offbreak","category":"Uncapped","iplTeamName":"KOLKATA KNIGHT RIDERS"},{"pid":"604527","country":"India","pointsScored":"","playingRole":"Middle-order batsman","majorTeams":"","name":"Nitish Rana","battingStyle":"Left-hand bat","bowlingStyle":"Right-arm offbreak","category":"Uncapped","iplTeamName":"KOLKATA KNIGHT RIDERS"},{"pid":"1083030","country":"India","pointsScored":"","playingRole":"Batsman","majorTeams":"","name":"KM Asif","battingStyle":"Right-hand bat","bowlingStyle":"Right-arm medium","category":"Uncapped","iplTeamName":"CHENNAI SUPER KINGS"},{"pid":"29264","country":"India","pointsScored":"","playingRole":"Bowler","majorTeams":"","name":"Harbhajan Singh","battingStyle":"Right-hand bat","bowlingStyle":"Right-arm offbreak","category":"Capped","iplTeamName":"CHENNAI SUPER KINGS"},{"pid":"237095","country":"India","pointsScored":"","playingRole":"Opening batsman","majorTeams":"","name":"Murali Vijay","battingStyle":"Right-hand bat","bowlingStyle":"Right-arm offbreak","category":"Capped","iplTeamName":"CHENNAI SUPER KINGS"}]};
 
+          
           $scope.bkpOfPlayers = angular.copy($scope.players);
 
           $scope.batsmen = [];
