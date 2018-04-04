@@ -1,7 +1,7 @@
 var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"])
         .config(function($stateProvider, $urlMatcherFactoryProvider,$urlRouterProvider,$locationProvider) {
           $urlMatcherFactoryProvider.caseInsensitive(true);
-          $urlRouterProvider.otherwise("/add");
+          //$urlRouterProvider.otherwise("/add");
           $locationProvider.html5Mode(true);
             $stateProvider
               .state("add", {
@@ -38,22 +38,14 @@ var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"]
             window.location.href = '/user/logout';
           }
 
-          $scope.currentDate = new Date();
-          //$scope.currentDate = new Date('2018-04-12T14:30:00.000Z');
+          //$scope.currentDate = new Date();
+          $scope.currentDate = new Date('2018-04-12T14:30:00.000Z');
 
           //new Date(year, month, day, hours, minutes, seconds, milliseconds)
           // month starts from 0-11  
-          $scope.config1 = {
+          $scope.config = {
             lastDateForTeamSelection: new Date(2018, 03, 07, 18, 00, 00, 00)
-          }
-
-          /*if($scope.currentDate.getTime() > $scope.config.lastDateForTeamSelection.getTime()) {
-            //user can not add or modify team from now
-            // below logic is whenever user comes on team selection page redirect user to view team page 
-            $state.go('view');
-          } else {
-            $state.go('add');
-          }*/
+          }          
 
           $scope.loggedInUser = {};
           $scope.players = [];
@@ -197,6 +189,15 @@ var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"]
               $scope.getUserList();
           }catch(err){
               console.log("get all users ", err);
+          }
+
+          //after loading of static data is done then only redired user 
+          if($scope.currentDate.getTime() > $scope.config.lastDateForTeamSelection.getTime()) {
+            //user can not add or modify team from now
+            // below logic is whenever user comes on team selection page redirect user to view team page 
+            $state.go('view');
+          } else {
+            $state.go('add');
           }
 
 
