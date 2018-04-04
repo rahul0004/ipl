@@ -105,11 +105,12 @@ module.exports = function(passport) {
                     console.log('user found');
                 }
 
-                if(!password === rows[0].ipl_users_cred_pwd){
-                	console.log('password is incorrect');
-                	return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+                if(password === rows[0].ipl_users_cred_pwd){
+                     console.log('password is correct');                    
                 }else{
-                     console.log('password is correct');
+                     console.log('password is incorrect');
+                     return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+                
                 }
 
                 /*// if the user is found but the password is wrong

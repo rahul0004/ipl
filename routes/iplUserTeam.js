@@ -29,13 +29,13 @@
 
 		},3000);
 		var userteamPid = [];
-		req.getConnection(function(err, conn){
+		/*req.getConnection(function(err, conn){
 			userteamPid = userTeamSchema.fetchUserAndTeam(conn, req.user.ipl_users_cred_username);
 		});
 
 		req.getConnection(function(err, conn){
 			userteamPlayersInfo = iplTeamPlyerbio.getPlayersBio(userteamPid);
-		});
+		});*/
 
 		res.contentType('application/json');
     	res.setHeader("Access-Control-Allow-Origin", "*")
@@ -47,16 +47,47 @@
 
 	
 	userTeamRouter.get('/getUserTeam', function(req, res){
-		var userteamPlayersInfo = [];
+		var userTeamPidDetails = [];
+		var loggedInUserDetails = {};
+			loggedInUserDetails.id = req.user.ipl_users_cred_id;
+			loggedInUserDetails.username = req.user.ipl_users_cred_username;
+			//loggedInuserDetails.password = req.user.ipl_users_cred_pwd;			
 		req.getConnection(function(err, conn){
-			var currentUserTeamDetails = userTeamSchema.fetchUserAndTeam(conn, req.user.ipl_users_cred_username);
-			if(currentUserTeamDetails.length > 0){
-				userteamPlayersInfo = iplTeamPlyerbio.getPlayersBio(userteamPid);
-			}
+			userTeamSchema.fetchUserAndTeam(conn, req.user.ipl_users_cred_username, function(err, data){
+				console.log('team object: '+JSON.stringify(data));
+				// callback function,  returned from fetchUserAndTeam
+				userTeamPidDetails.push(data.ipl_users_team_player_one);
+				userTeamPidDetails.push(data.ipl_users_team_player_two);
+				userTeamPidDetails.push(data.ipl_users_team_player_three);
+				userTeamPidDetails.push(data.ipl_users_team_player_four);
+				userTeamPidDetails.push(data.ipl_users_team_player_five);
+				userTeamPidDetails.push(data.ipl_users_team_player_six);
+				userTeamPidDetails.push(data.ipl_users_team_player_seven);
+				userTeamPidDetails.push(data.ipl_users_team_player_eight);
+				userTeamPidDetails.push(data.ipl_users_team_player_nine);
+				userTeamPidDetails.push(data.ipl_users_team_player_ten);
+				userTeamPidDetails.push(data.ipl_users_team_player_eleven);
+				loggedInUserDetails.teamMembersId = userTeamPidDetails;
+				console.log("combined team-members id ",userTeamPidDetails); 
+				res.contentType('application/json');
+		    	res.setHeader("Access-Control-Allow-Origin", "*")
+				res.json(loggedInUserDetails);
+			});
+		
 		});
+		//loggedInUserDetails.teamMembers = userteamPlayersInfo;
+		/*console.log("combined team-members id ",userTeamPidDetails); 
 		res.contentType('application/json');
     	res.setHeader("Access-Control-Allow-Origin", "*")
-		res.json(userteamPlayersInfo);
+		res.json(loggedInUserDetails);*/
+	});
+
+	userTeamRouter.post('/PlayerBio', function(req, res){
+		console.log(req.body.playerBioArr);
+		var playersPidArr = req.params.playerBioArr;
+		res.contentType('application/json');
+    	res.setHeader("Access-Control-Allow-Origin", "*")
+		res.json(playersPidArr);
 	});
 
 module.exports = userTeamRouter;

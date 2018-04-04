@@ -36,6 +36,7 @@ var userTeam = {
 																			if(!err){
 																				console.log('User team details updated successfully for '+ userNTeamDetails.userNTeam.ipl_users_team_un);
 																			}else{
+																				console.log('this.sql', this.sql);
 																				console.log('Error while updating user team details '+ err);
 																			}
 																		});
@@ -56,17 +57,18 @@ var userTeam = {
 											}
 										});
 						},
-	fetchUserAndTeam	: function(conn, currentUserName){
-							var userTeamPidDetails = [];
+	fetchUserAndTeam	: function(conn, currentUserName, callback){
+							// var userTeamPidDetails = [];
 							var userTeamSelectQuery = 'SELECT ipl_users_team_un, ipl_users_team_player_one, ipl_users_team_player_two, ipl_users_team_player_three, ipl_users_team_player_four, ipl_users_team_player_five, ipl_users_team_player_six, ipl_users_team_player_seven, ipl_users_team_player_eight, ipl_users_team_player_nine, ipl_users_team_player_ten, ipl_users_team_player_eleven FROM ipl_2018.ipl_users_team WHERE ipl_users_team_un = ?';
 							conn.query(userTeamSelectQuery,[currentUserName], function(err, rows, fields){
 								if(!err){
 									if(rows.length > 0){
+										callback(null,rows[0]);
 										/*rows.forEach(function(userTeamFromDB){
 											userNTeam = userTeamFromDB;
 											userNTeamDetails.push(userNTeam);
 										});*/
-										userTeamPidDetails.push(rows[0].ipl_users_team_player_one);
+										/*userTeamPidDetails.push(rows[0].ipl_users_team_player_one);
 										userTeamPidDetails.push(rows[0].ipl_users_team_player_two);
 										userTeamPidDetails.push(rows[0].ipl_users_team_player_three);
 										userTeamPidDetails.push(rows[0].ipl_users_team_player_four);
@@ -77,6 +79,8 @@ var userTeam = {
 										userTeamPidDetails.push(rows[0].ipl_users_team_player_nine);
 										userTeamPidDetails.push(rows[0].ipl_users_team_player_ten);
 										userTeamPidDetails.push(rows[0].ipl_users_team_player_eleven);
+										console.log("inside row ", userTeamPidDetails);*/
+										//return userTeamPidDetails;
 									}else{
 										console.log('No teams registered for users.');
 									}
@@ -84,8 +88,11 @@ var userTeam = {
 									console.log('Error while selecting user and team details: '+err);
 								}
 							});
-							return userTeamPidDetails;
+							// return userTeamPidDetails;cls
+
 						}
+
+
 }
 
 module.exports = userTeam;

@@ -7,7 +7,8 @@ var express 		= require('express'),
 	session			= require('express-session'),
 	//morgan 			= require('morgan'),
 	passport		= require('passport'),
-	myConnection 	= require('express-myconnection'),
+	flash     	 	= require('connect-flash'),
+	myConnection 	= require('express-myconnection'),	
 	config			= require('./config.js'),
 	rp 				= require('request-promise'),
 	dateTime 		= require('node-datetime'),
@@ -53,7 +54,7 @@ app.use(session({
  } )); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-//app.use(flash()); // use connect-flash for flash messages stored in session
+app.use(flash()); // use connect-flash for flash messages stored in session
 
 var indexRouter 		= require('./routes/index');
 	userRouter			= require('./routes/iplUsers'),

@@ -4,7 +4,7 @@ var express 	= require('express'),
 	download 	= require('image-downloader'),
 	indexRouter = express.Router({mergeParams : true});
 
-/*indexRouter.get('/teams', function(req,res){
+indexRouter.get('/teams', function(req,res){
 	console.log('got a http get request');
 	req.getConnection(function(err, conn){
 		conn.query('SELECT * from ipl_2018.ipl_teams', function(err, rows, fields) {
@@ -75,7 +75,7 @@ indexRouter.get('/getPlayersImg', function(req,res){
     		}
 		});
 	});
-});*/
+});
 
 
 indexRouter.get('/index',isLoggedIn, function(req,res){

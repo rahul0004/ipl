@@ -41,141 +41,6 @@ app.controller("listCtrl", function($scope, $http, $window, $timeout, $state, $u
         });        
     };
 	
-	$scope.validateAddedPlayer = function() {
-        var allowToSubmit = false;
-        var numberOfBatsman = 0;
-        var numberOfBowler = 0;
-        var numberOfAllRounder = 0;
-        var numberOfForeginPlayer = 0;
-        var numberOfUncappedPlayer = 0;
-        var numberOfWicketkeeper = 0;
-
-		if($scope.loggedInUser.teamMembers.length === 0) {
-            $scope.error = true;
-			return allowToSubmit;	
-		} else if($scope.loggedInUser.teamMembers && $scope.loggedInUser.teamMembers.length > 0) {
-            if($scope.loggedInUser.teamMembers.length < $scope.userTeamConfig.numberOfPlayersAllowed) {
-                $scope.error = true;
-                $scope.errorMessage = "There are less than "+$scope.userTeamConfig.numberOfPlayersAllowed+"  players in your team.";
-                $scope.validateUserTeamCriteria.numberOfPlayers = false;
-            } else {
-                $scope.validateUserTeamCriteria.numberOfPlayers = true;
-            }
-
-			for(var i=0; i < $scope.loggedInUser.teamMembers.length; i++) {
-                var selectedTeamMember = $scope.loggedInUser.teamMembers[i];                
-                if(selectedTeamMember.country.toLowerCase().indexOf('india') === -1) {
-                    numberOfForeginPlayer++;
-                }
-
-                if(selectedTeamMember.playingRole.toLowerCase().indexOf('wicketkeeper') != -1) {
-                    numberOfWicketkeeper++;
-                } else if(selectedTeamMember.playingRole.toLowerCase().indexOf('batsman') != -1) {
-                    numberOfBatsman++;
-                }
-
-                if(selectedTeamMember.playingRole.toLowerCase().indexOf('uncapped') != -1) {
-                    numberOfUncappedPlayer++;
-                }                
-                if(selectedTeamMember.playingRole.toLowerCase().indexOf('bowler') != -1) {
-                    numberOfBowler++;
-                }
-                if(selectedTeamMember.playingRole.toLowerCase().indexOf('allrounder') != -1) {
-                    numberOfAllRounder++;
-                }
-            }
-
-            if(numberOfForeginPlayer > $scope.userTeamConfig.numberOfForeginPlayerAllowed) {
-                $scope.error = true;
-                $scope.errorMessage = "There are more than 4 foreign players in your team.";
-                $scope.validateUserTeamCriteria.foreginPlayers = false;
-            } else {
-                $scope.validateUserTeamCriteria.foreginPlayers = true;
-            }
-
-            //as no of keeper should be exacctly 1 not more than nor less than 
-            if(numberOfWicketkeeper != $scope.userTeamConfig.numberOfWicketkeeperAllowed) {
-                $scope.error = true;
-                $scope.errorMessage = "There are more than 1 wicket keeper in your team.";
-                $scope.validateUserTeamCriteria.wicketkeeper = false;
-            } else {
-                $scope.validateUserTeamCriteria.wicketkeeper = true;
-            } 
-
-            if(numberOfBatsman != $scope.userTeamConfig.numberOfBatsmanAllowed) {
-                $scope.error = true;
-                $scope.errorMessage = "There are more than 5 batsmen in your team.";
-                $scope.validateUserTeamCriteria.batsmen = false;
-            } else {
-                $scope.validateUserTeamCriteria.batsmen = true;
-            }
-
-            if(numberOfBowler != $scope.userTeamConfig.numberOfBowlerAllowed) {
-                $scope.error = true;
-                $scope.errorMessage = "There are more than 3 bowlers in your team.";
-                $scope.validateUserTeamCriteria.bowlers = false;
-            } else {
-                $scope.validateUserTeamCriteria.bowlers = true;
-            }
-
-            if(numberOfAllRounder != $scope.userTeamConfig.numberOfAllRounderAllowed) {
-                $scope.error = true;
-                $scope.errorMessage = "There are more than 2 All rounder in your team.";
-                $scope.validateUserTeamCriteria.allrounders = false;
-            } else {
-                $scope.validateUserTeamCriteria.allrounders = true;
-            }
-
-            if(numberOfUncappedPlayer < $scope.userTeamConfig.numberOfUncappedPlayerAllowed) {
-                $scope.error = true;
-                $scope.errorMessage = "There are less than 2 Uncapped player in your team.";
-                $scope.validateUserTeamCriteria.uncappedPlayers = false;
-            } else {
-                $scope.validateUserTeamCriteria.uncappedPlayers = true;                
-            }
-
-
-            if($scope.validateUserTeamCriteria.foreginPlayers && $scope.validateUserTeamCriteria.wicketkeeper && 
-                 $scope.validateUserTeamCriteria.batsmen && $scope.validateUserTeamCriteria.bowlers && 
-                 $scope.validateUserTeamCriteria.allrounders && $scope.validateUserTeamCriteria.uncappedPlayers) {
-                $scope.error = false;
-            }
-
-            if($scope.error) {
-                // not allow 
-            } else {
-                $scope.error = false;
-                console.log("allow ");
-                allowToSubmit = true;
-                /*$scope.validateUserTeamCriteria = {
-                    batsmen: true, 
-                      bowlers: true, 
-                      allrounders: true, 
-                      foreginPlayers: true, 
-                      uncappedPlayers: true, 
-                      wicketkeeper: true,
-                      numberOfPlayers:true
-                };*/
-            }
-
-            /*if( (numberOfForeginPlayer > $scope.userTeamConfig.numberOfForeginPlayerAllowed) || 
-                (numberOfWicketkeeper > $scope.userTeamConfig.numberOfWicketkeeperAllowed) || 
-                (numberOfBatsman > $scope.userTeamConfig.numberOfBatsmanAllowed) || 
-                (numberOfBowler > $scope.userTeamConfig.numberOfBowlerAllowed) || 
-                (numberOfAllRounder > $scope.userTeamConfig.numberOfAllRounderAllowed) || 
-                (numberOfUncappedPlayer < $scope.userTeamConfig.numberOfUncappedPlayerAllowed) ) {
-                console.log("do not allow ");
-                allowToSubmit = false;
-                $scope.error = true;
-                $scope.errorMessage = "YOu have violated our team selection rules";
-            } else {
-                console.log("allow ");
-                allowToSubmit = true;
-            } */           		
-		}
-        return allowToSubmit;
-	};
-	
 	$scope.select = function(item) {
 		$scope.selectedTeamMember = item;
 	};
@@ -274,6 +139,11 @@ app.controller("listCtrl", function($scope, $http, $window, $timeout, $state, $u
         }
         return status; 
     }
-
+    
+    /*try{
+         $scope.validateAddedPlayer();        
+    }catch(err){
+        console.log("error in validateAddedPlayer", err);
+    }*/
 
 });
