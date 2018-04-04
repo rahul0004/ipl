@@ -4,9 +4,9 @@ var iplRulesConst 	= require('../config.js'),
 	dbconfig 		= require('../config.js');
 
 //console.log(dbconfig.database);
-var conn = mysql.createConnection(dbconfig.database);
+/*var conn = mysql.createConnection(dbconfig.database);
 
-conn.query('USE ' + dbconfig.database.db);
+conn.query('USE ' + dbconfig.database.db);*/
 
 
 var dailyStats = {
@@ -58,7 +58,7 @@ var dailyStats = {
  										}
  										batting.score = batting.attr.runsScored + batting.attr.sixScored + batting.attr.fourScored
  															+ batting.attr.century + batting.attr.strikeRate;
- 										batting.playerid = battingScore.pid;
+ 										batting.playerid = parseInt(battingScore.pid);
  										console.log('battingScore: '+JSON.stringify(batting));
 								return batting;
 							},
@@ -109,7 +109,7 @@ var dailyStats = {
 											bowling.score 	 = bowling.attr.wicket + bowling.attr.maiden + bowling.attr.economyRate +
 																bowling.attr.wicketHall + bowling.attr.dotBalls;
 											// console.log('bowling score: '+bowling.score);
-											bowling.playerid = bowlingScore.pid;
+											bowling.playerid = parseInt(bowlingScore.pid);
 											console.log('bowlingScore: '+JSON.stringify(bowling));
 									return bowling;
 							},
@@ -139,308 +139,105 @@ var dailyStats = {
 									playerid	: 0
 								}
 									m_o_m.score = iplRulesConst.iplRules.man_of_match;
-									m_o_m.playerid = playerName.pid;
+									m_o_m.playerid = parseInt(playerName.pid);
 									console.log('m_o_m_score: '+JSON.stringify(m_o_m));
 									return m_o_m;
 							},
-	persistFieldingScore	: function(playerDetailsArr, matchId, callback){
+	calculateTotalPoints	: function(iplDailyScoreMap){
+								var playerIdsFromMapStoredAsKeys = iplDailyScoreMap.keys();
+								var mapKeysLength = iplDailyScoreMap.size;
+								var eachKey = 0;
+								for(eachKey =0; eachKey < mapKeysLength; eachKey++){
+									var playerIdKey  = parseInt(playerIdsFromMapStoredAsKeys.next().value);
+									var ipl_daily_score = iplDailyScoreMap.get(playerIdKey);
+									var totalScore = parseInt(ipl_daily_score.ipl_daily_score_fielding)  + parseInt(ipl_daily_score.ipl_daily_score_bowling) 
+															+ parseInt(ipl_daily_score.ipl_daily_score_batting) + parseInt(ipl_daily_score.ipl_daily_score_mom);
+									ipl_daily_score.ipl_daily_score_total_points = parseInt(totalScore);
+									iplDailyScoreMap.set(playerIdKey, ipl_daily_score);
+								}
+								return iplDailyScoreMap;
+							},
+	createDailyScoreMap	: function(playerDetailsArr, matchId, ipldailyScoreMap, isBatting, isBowling, isFielding, isMom){
 								// console.log(conn);
+								if(!ipldailyScoreMap){
+									ipldailyScoreMap = new Map();
+								}
 								playerDetailsArr.forEach(function(playerDetails){
-								console.log('====>persist Fielding Score for match: '+matchId+ ' playerDetails '+ playerDetails.playerid);
-								var currDateTime = dateTime.create();
-								var formatted = new Date(currDateTime.format('m/d/Y H:M:S'));
-								 conn.beginTransaction(function(err) {
-									conn.query('SELECT ipl_daily_score_player_id from ipl_2018.ipl_daily_score where ipl_daily_score_player_id = ? AND ipl_daily_score_match_id = ? ',
-										[playerDetails.playerid, matchId],
-										function(err, rows, fields) {
-										  if (!err){
-										  	console.log('Fielding data available for player <'+ JSON.stringify(rows) +'>');
-										  		if(rows.length > 0){
-										  			conn.query('UPDATE ipl_daily_score SET ipl_daily_score_fielding = ?, ipl_daily_score_tstamp = ? WHERE ipl_daily_score_player_id = ? AND ipl_daily_score_match_id = ?'
-										  				, [playerDetails.score,formatted,playerDetails.playerid,matchId], 
-										  							function(err,results){
-										  								if(!err){
-										  									 conn.commit(function(err) {
-																		        if (err) { 
-																		          conn.rollback(function() {
-																		            throw err;
-																		          });
-																		        }
-																		        console.log('Transaction Complete.');
-																		        // conn.release();
-																		      });
-										  									console.log('Fiedling score details updated');
-										  								}else{
-										  									console.log('Error while updating fielding score details'+err);
-										  								}
-										  			});
-										  		}else{
-										  			console.log('Trying to insert Fielding data available for player <'+ playerDetails.playerid +'> and match <'+ matchId +'>');
-										  			var ipl_daily_score = {};
-										  			ipl_daily_score.ipl_daily_score_player_id 		= playerDetails.playerid;
-										  			ipl_daily_score.ipl_daily_score_batting 		= 0;
-										  			ipl_daily_score.ipl_daily_score_bowling 		= 0;
-										  			ipl_daily_score.ipl_daily_score_mom 			= 0;
-										  			ipl_daily_score.ipl_daily_score_total_points	= 0;
-										  			ipl_daily_score.ipl_daily_score_fielding 		= playerDetails.score;
-										  			ipl_daily_score.ipl_daily_score_match_id 		= matchId;
-										  			ipl_daily_score.ipl_daily_score_tstamp 			= formatted;
-										  			conn.query('INSERT INTO ipl_daily_score SET ?', ipl_daily_score, function(err, results){
-										  				if(!err){
-										  					conn.commit(function(err) {
-																		        if (err) { 
-																		          conn.rollback(function() {
-																		            throw err;
-																		          });
-																		        }
-																		        console.log('Transaction Complete.');
-																		      });
-										  					console.log('Fielding Score details inserted');
-										  				}else{
-										  					console.log('Error while inserting fielding score details'+err);
-										  				}
-										  			});
-										  		}
-										  	}else{
-										  		/*connection.rollback(function() {
-										  			console.log('Error while selecting players score for fielding.'+err);
-											        throw err;
-											      });*/
-												console.log('Error while selecting players score for fielding.'+err);
-										    }
-									});
-								 });
-								});
-								callback();
-							},
-	persistBattingScore	: function(playerDetailsArr, matchId, callback){
-								playerDetailsArr.forEach(function(playerDetails){
-								console.log('====>persist Batting Score for match: '+matchId + 'and player id '+playerDetails.playerid);
-								var currDateTime = dateTime.create();
-								var formatted = new Date(currDateTime.format('m/d/Y H:M:S'));
-								conn.beginTransaction(function(err) {
-									conn.query('SELECT ipl_daily_score_player_id from ipl_2018.ipl_daily_score where ipl_daily_score_match_id = ? AND ipl_daily_score_player_id = ?',
-										[matchId, playerDetails.playerid],
-										function(err, rows, fields) {
-										  if (!err){
-										  		console.log('batting player details for playerid <'+playerDetails.playerid +'> and matchId <'+ matchId+'>');
-										  		console.log('Rows post search: '+ rows);
-										  		if(rows.length > 0){
-										  			conn.query('UPDATE ipl_daily_score SET ipl_daily_score_batting = ?, ipl_daily_score_tstamp = ? WHERE ipl_daily_score_player_id = ? AND ipl_daily_score_match_id = ?', 
-										  				[playerDetails.score,formatted,playerDetails.playerid, matchId], 
-										  							function(err,results){
-										  								if(!err){
-										  									conn.commit(function(err) {
-																		        if (err) { 
-																		          conn.rollback(function() {
-																		            throw err;
-																		          });
-																		        }
-																		        console.log('Transaction Complete.');
-																		      });
-										  									console.log('Batting score details updated');
-										  								}else{
-										  									console.log('Error while updating batting score details'+err);
-										  								}
-										  			});
-										  		}else{
-										  			console.log('No rows found for playerid <'+ playerDetails.playerid +'> and match id <'+ matchId+'>')
-										  			var ipl_daily_score = {};
-										  			ipl_daily_score.ipl_daily_score_player_id 	= playerDetails.playerid;
-													ipl_daily_score.ipl_daily_score_batting		= playerDetails.score;
-													ipl_daily_score.ipl_daily_score_match_id	= matchId;
-													ipl_daily_score.ipl_daily_score_tstamp		= formatted;
-													ipl_daily_score.ipl_daily_score_bowling		= 0;
-													ipl_daily_score.ipl_daily_score_fielding	= 0;
-													ipl_daily_score.ipl_daily_score_mom			= 0;
-													ipl_daily_score.ipl_daily_score_total_points = 0;
-										  			conn.query('INSERT INTO ipl_daily_score SET ?', ipl_daily_score, function(err, results){
-										  				if(!err){
-										  					conn.commit(function(err) {
-																		        if (err) { 
-																		          conn.rollback(function() {
-																		            throw err;
-																		          });
-																		        }
-																		        console.log('Transaction Complete.');
-																		      });
-										  					console.log('Batting Score details inserted');
-										  				}else{
-										  					console.log('Error while inserting batting score details'+err);
-										  				}
-										  			});
-										  		}
-										  	}else{
-											   console.log('Error while selecting players score for batting.'+err);
-										    }
-									});
-								});
-								});
-								callback();
-							},
-	persistBowlingScore	: function(playerDetailsArr, matchId, callback){
-								playerDetailsArr.forEach(function(playerDetails){
-								console.log('====>persist bowling Score for match: '+matchId + 'and player id '+playerDetails.playerid);
-								var currDateTime = dateTime.create();
-								var formatted = new Date(currDateTime.format('m/d/Y H:M:S'));
-								conn.beginTransaction(function(err) {
-									conn.query('SELECT ipl_daily_score_player_id FROM ipl_2018.ipl_daily_score WHERE ipl_daily_score_match_id = ? AND ipl_daily_score_player_id = ?',
-										[matchId, playerDetails.playerid],
-										function(err, rows, fields) {
-										  if (!err){
-										  		if(rows.length > 0){
-										  			conn.query('UPDATE ipl_daily_score SET ipl_daily_score_bowling = ?, ipl_daily_score_tstamp = ? WHERE ipl_daily_score_player_id = ? AND ipl_daily_score_match_id = ?',
-										  				[playerDetails.score,formatted,playerDetails.playerid,matchId], 
-										  							function(err,results){
-										  								if(!err){
-										  									conn.commit(function(err) {
-																		        if (err) { 
-																		          conn.rollback(function() {
-																		            throw err;
-																		          });
-																		        }
-																		        console.log('Transaction Complete.');
-																		      });
-										  									console.log('Bowling score details updated');
-										  								}else{
-										  									console.log('Error while updating bowling score details'+err);
-										  								}
-										  			});
-										  		}else{
-										  			var ipl_daily_score = {};
-										  			ipl_daily_score.ipl_daily_score_player_id 		= playerDetails.playerid;
-													ipl_daily_score.ipl_daily_score_bowling			= playerDetails.score;
-													ipl_daily_score.ipl_daily_score_match_id		= matchId;
-													ipl_daily_score.ipl_daily_score_tstamp			= formatted;
-													ipl_daily_score.ipl_daily_score_batting			= 0;
-													ipl_daily_score.ipl_daily_score_fielding		= 0;
-													ipl_daily_score.ipl_daily_score_mom				= 0;
-													ipl_daily_score.ipl_daily_score_total_points 	= 0;
-										  			conn.query('INSERT INTO ipl_daily_score SET ?', ipl_daily_score, function(err, results){
-										  				if(!err){
-										  					conn.commit(function(err) {
-																		        if (err) { 
-																		          conn.rollback(function() {
-																		            throw err;
-																		          });
-																		        }
-																		        console.log('Transaction Complete.');
-																		      });
-										  					console.log('Bowling Score details inserted');
-										  				}else{
-										  					console.log('Error while inserting bwowling score details'+err);
-										  				}
-										  			});
-										  		}
-										  	}else{
-											    console.log('Error while selecting players score for bowling.'+err);
-										    }
-									});
-								});
-								});
-								callback();
-							},
-		persistMomScore	: function(playerDetails, matchId, callback){
-								console.log('====>persist man of match Score for match: '+matchId+' for player '+JSON.stringify(playerDetails));
-								var currDateTime = dateTime.create();
-								var formatted = new Date(currDateTime.format('m/d/Y H:M:S'));
-								conn.beginTransaction(function(err) {
-									conn.query('SELECT ipl_daily_score_player_id from ipl_2018.ipl_daily_score where ipl_daily_score_match_id = ? AND ipl_daily_score_player_id = ?',
-										[matchId, playerDetails.playerid], 
-										function(err, rows, fields) {
-										  if (!err){
-										  		if(rows.length > 0){
-										  			conn.query('UPDATE ipl_daily_score SET ipl_daily_score_mom = ?, ipl_daily_score_tstamp = ? WHERE ipl_daily_score_player_id = ? AND ipl_daily_score_match_id = ?', 
-										  					[playerDetails.score,formatted,playerDetails.playerid,matchId], 
-										  							function(err,results){
-										  								if(!err){
-										  									conn.commit(function(err) {
-																		        if (err) { 
-																		          conn.rollback(function() {
-																		            throw err;
-																		          });
-																		        }
-																		        console.log('Transaction Complete.');
-																		      });
-										  									console.log('Man_of_match score details updated');
-										  								}else{
-										  									console.log('Error while updating man_of_match score details'+err);
-										  								}
-										  			});
-										  		}else{
-										  			var ipl_daily_score = {};
-										  			ipl_daily_score.ipl_daily_score_player_id 	= playerDetails.playerid;
-													ipl_daily_score.ipl_daily_score_mom			= playerDetails.score;
-													ipl_daily_score.ipl_daily_score_match_id	= matchId;
-													ipl_daily_score.ipl_daily_score_tstamp		= formatted;
-													ipl_daily_score.ipl_daily_score_batting		= 0;
-													ipl_daily_score.ipl_daily_score_fielding	= 0;
-													ipl_daily_score.ipl_daily_score_bowling		= 0;
-													ipl_daily_score.ipl_daily_score_total_points = 0;
-										  			conn.query('INSERT INTO ipl_daily_score SET ?', ipl_daily_score, function(err, results){
-										  				if(!err){
-										  					conn.commit(function(err) {
-																		        if (err) { 
-																		          conn.rollback(function() {
-																		            throw err;
-																		          });
-																		        }
-																		        console.log('Transaction Complete.');
-																		      });
-										  					console.log('Man_of_match Score details inserted');
-										  				}else{
-										  					console.log('Error while inserting Man_of_match score details'+err);
-										  				}
-										  			});
-										  		}
-										  	}else{
-											    console.log('Error while selecting players score for Man_of_match.'+err);
-										    }
-									});
-								});
-								callback();
-							},
-		persistTotalPoints :  function(matchId, callback){
-								var currDateTime = dateTime.create();
-								var formatted = new Date(currDateTime.format('m/d/Y H:M:S'));
-								conn.beginTransaction(function(err) {
-								conn.query('SELECT ipl_daily_score_player_id FROM ipl_2018.ipl_daily_score WHERE ipl_daily_score_match_id = '+matchId, 
-									function(err, rows, fields){
-										if(!err){
-											rows.forEach(function(playerId){
-													conn.query('SELECT ipl_daily_score_fielding, ipl_daily_score_bowling, ipl_daily_score_batting, ipl_daily_score_mom from ipl_2018.ipl_daily_score WHERE ipl_daily_score_player_id = ? AND ipl_daily_score_match_id = ?', 
-														[playerId, matchId],
-															function(err, rows, fields){
-																if(rows.length > 0){
-																	var totalPoints = parseInt(rows[0].ipl_daily_score_fielding) + parseInt(rows[0].ipl_daily_score_batting) + parseInt(rows[0].ipl_daily_score_bowling) + parseInt(rows[0].ipl_daily_score_mom);
-																	var updateTotalPoints = 'UPDATE ipl_2018.ipl_daily_score SET ipl_daily_score_total_points = ? WHERE ipl_daily_score_player_id = ? AND ipl_daily_score_match_id = ? AND ipl_daily_score_tstamp = ?';
-																	conn.query(updateTotalPoints, [totalPoints,playerid,matchId,formatted], function(err,results){
-																		if(!err){
-																			conn.commit(function(err) {
-																		        if (err) { 
-																		          conn.rollback(function() {
-																		            throw err;
-																		          });
-																		        }
-																		        console.log('Transaction Complete.');
-																		      });
-																			console.log('Total points calculated and update for playerid '+ ipl_daily_score.ipl_daily_score_player_id + ' for match '+ ipl_daily_score.ipl_daily_score_match_id);
-																		}else{
-																			console.log('Error while calculating total points for playerid '+ ipl_daily_score.ipl_daily_score_player_id + ' for match '+ ipl_daily_score.ipl_daily_score_match_id);
-																			console.log(err);
-																		}
-																	});
-																}
-													});
-											});
-										}else{
-											console.log('Error while selecting the players for total points: '+ err);
-										}
-								});
+								console.log('====>creating ipl daily Score for match: '+matchId+ ' playerDetails '+ playerDetails.playerid);
+								
+								if(ipldailyScoreMap.has(playerDetails.playerid)){
+									console.log('existing player details found in map for playerDetails '+ playerDetails.playerid);
+									
+									var ipl_daily_score 						= ipldailyScoreMap.get(playerDetails.playerid);
+									console.log('existing player details  '+ ipl_daily_score);
+									ipl_daily_score.ipl_daily_score_match_id 	= matchId;
+									ipl_daily_score.ipl_daily_score_player_id 	= playerDetails.playerid;
+									ipldailyScoreMap.set(playerDetails.playerid, 
+														createIplDailyScoreObject(isBatting, isBowling, isFielding, isMom, playerDetails, 
+																								ipl_daily_score)
+														);
+								}else{
+									var ipl_daily_score 						= createIplDailyScore();
+									ipl_daily_score.ipl_daily_score_match_id 	= matchId;
+									ipl_daily_score.ipl_daily_score_player_id 	= playerDetails.playerid;
+									ipldailyScoreMap.set(playerDetails.playerid, 
+														createIplDailyScoreObject(isBatting, isBowling, isFielding, isMom, playerDetails, 
+																								ipl_daily_score)
+														);
+								}
 							});
-			callback();
-		}
+							return ipldailyScoreMap;
+								
+							},
+		persistDailyScoreForPlayers :  function(matchId, iplDailyScoreMap, conn){
+								var playerIdsFromMapStoredAsKeys = iplDailyScoreMap.keys();
+								var mapKeysLength = iplDailyScoreMap.size;
+								var eachKey = 0;
+								for(eachKey =0; eachKey < mapKeysLength; eachKey++){
+									var currDateTime = dateTime.create();
+									var formatted = new Date(currDateTime.format('m/d/Y H:M:S'));
+									var playerIdKey  = parseInt(playerIdsFromMapStoredAsKeys.next().value);
+									var ipl_daily_score = iplDailyScoreMap.get(playerIdKey);
+									ipl_daily_score.ipl_daily_score_tstamp = formatted;
+									var insertQueryForScores = 'INSERT INTO ipl_daily_score(ipl_daily_score_match_id, ipl_daily_score_player_id, ipl_daily_score_fielding, ipl_daily_score_batting, ipl_daily_score_bowling, ipl_daily_score_mom, ipl_daily_score_total_points, ipl_daily_score_tstamp) VALUES (?,?,?,?,?,?,?,?)';
+									conn.query(insertQueryForScores,[ipl_daily_score.ipl_daily_score_match_id, ipl_daily_score.ipl_daily_score_player_id, ipl_daily_score.ipl_daily_score_fielding, ipl_daily_score.ipl_daily_score_batting,ipl_daily_score.ipl_daily_score_bowling,ipl_daily_score.ipl_daily_score_mom,ipl_daily_score.ipl_daily_score_total_points,ipl_daily_score.ipl_daily_score_tstamp], 
+										function(err, rows){
+											if(!err){
+												
+											}else{
+												console.log('Error while inserting players daily score '+ err);
+											}
+									});
+								}
+							}
+}
+
+function createIplDailyScoreObject(isBatting, isBowling, isFielding, isMom, playerDetails, ipl_daily_score){
+	if(isBatting){
+		ipl_daily_score.ipl_daily_score_batting = playerDetails.score;
 	}
+	else if(isBowling){
+		ipl_daily_score.ipl_daily_score_bowling = playerDetails.score;
+	}else if(isFielding){
+		ipl_daily_score.ipl_daily_score_fielding =  playerDetails.score
+	}else if(isMom){
+		ipl_daily_score.ipl_daily_score_mom = playerDetails.score;
+	}
+	return ipl_daily_score;
+}
+
+function createIplDailyScore(){
+	var ipl_daily_score = {};
+	ipl_daily_score.ipl_daily_score_player_id = 0;
+	ipl_daily_score.ipl_daily_score_match_id = 0;
+	ipl_daily_score.ipl_daily_score_fielding = 0;
+	ipl_daily_score.ipl_daily_score_bowling = 0;
+	ipl_daily_score.ipl_daily_score_batting = 0;
+	ipl_daily_score.ipl_daily_score_mom = 0;
+	ipl_daily_score.ipl_daily_score_total_points = 0;
+	ipl_daily_score.ipl_daily_score_tstamp = new Date();
+	return ipl_daily_score;
+}
 
 function executeQuery(queryStr, params, callback){
 	if(conn){

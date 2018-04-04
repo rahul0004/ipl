@@ -4,7 +4,7 @@ var express 	= require('express'),
 	download 	= require('image-downloader'),
 	indexRouter = express.Router({mergeParams : true});
 
-indexRouter.get('/teams', function(req,res){
+/*indexRouter.get('/teams', function(req,res){
 	console.log('got a http get request');
 	req.getConnection(function(err, conn){
 		conn.query('SELECT * from ipl_2018.ipl_teams', function(err, rows, fields) {
@@ -75,16 +75,21 @@ indexRouter.get('/getPlayersImg', function(req,res){
     		}
 		});
 	});
-});
+});*/
 
 
 indexRouter.get('/index',isLoggedIn, function(req,res){
 	console.log('invoking index');
-	res.render('/');
+/*	res.contentType('application/json');
+    res.setHeader("Access-Control-Allow-Origin", "*");*/
+	//res.render('./views/createTeam');
+	res.render('./views/home');
+	// res.status(200).json({'success':true, 'User details':req.user});
 });
 
 indexRouter.get('/', isLoggedIn, function(req,res){
 	res.redirect('/index');
+	// res.send('index');
 });
 
 // route middleware to make sure
@@ -97,7 +102,7 @@ function isLoggedIn(req, res, next) {
 		}
 
 	// if they aren't redirect them to the home page
-	res.redirect('/user/login');
+	res.redirect('/user/ipl/login');
 }
 
 

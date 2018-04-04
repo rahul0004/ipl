@@ -66,44 +66,34 @@ var express 				= require('express'),
 						    	dailyPlayerStats.manOfMatchArr.push(
 						    		dailyPlayerStats.calculateMomScore(repos.data["man-of-the-match"]));
 						    	
+						    	var ipl_daily_scoreMap = new Map();
 						    	//persist score for players
 						    	// dailyPlayerStats.fieldingArr.forEach(function(fieldingScore){
-							    		dailyPlayerStats.persistFieldingScore(dailyPlayerStats.fieldingArr, matchId, function(){
-								    			dailyPlayerStats.persistBattingScore(dailyPlayerStats.battingArr, matchId, function(){
-									    				dailyPlayerStats.persistBowlingScore(dailyPlayerStats.bowlingArr, matchId, function(){
-										    					dailyPlayerStats.persistMomScore(dailyPlayerStats.manOfMatchArr[0], matchId, function(){
-											    						dailyPlayerStats.persistTotalPoints(matchId, function(){
-											    							console.log('All functions for IPL data persistence invoked serially');
-											    						});
-										    					});
-									    				});
-								    			});
-							    		});
-						    	// });
-								
-						    	// persist batting score	
-						    	/*dailyPlayerStats.battingArr.forEach(function(battingScore){
-						    		dailyPlayerStats.persistBattingScore(dailyPlayerStats.battingArr, matchId, conn);
-						    	 });
-						    	//persist bowling score
-						    	dailyPlayerStats.bowlingArr.forEach(function(bowlingScore){
-						    		dailyPlayerStats.persistBowlingScore(dailyPlayerStats.bowlingArr, matchId, conn);
-						    	});
-						    	// persist man of the match
-						    	dailyPlayerStats.persistMomScore(dailyPlayerStats.manOfMatchArr[0], matchId, conn);
-						    	//persist total points for a player for the match
-						    	dailyPlayerStats.persistTotalPoints(matchId, conn);*/
+							    ipl_daily_scoreMap = dailyPlayerStats.createDailyScoreMap(dailyPlayerStats.fieldingArr, matchId, ipl_daily_scoreMap, false, false, true, false);
+							   	/*console.log('After processing fielding array: ');
+							   	ipl_daily_scoreMap.forEach((value, key) => {
+    									console.log(key, value);
+								});*/
+							    ipl_daily_scoreMap = dailyPlayerStats.createDailyScoreMap(dailyPlayerStats.battingArr, matchId, ipl_daily_scoreMap, true, false, false, false);
+							   /* console.log('After processing batting array: ');
+							   	ipl_daily_scoreMap.forEach((value, key) => {
+    									console.log(key, value);
+								});*/
+							    ipl_daily_scoreMap = dailyPlayerStats.createDailyScoreMap(dailyPlayerStats.bowlingArr, matchId, ipl_daily_scoreMap, false, true, false, false);
+							    
+							    ipl_daily_scoreMap = dailyPlayerStats.createDailyScoreMap(dailyPlayerStats.manOfMatchArr, matchId, ipl_daily_scoreMap, false, false, false, true);
+							    console.log('map after manOfmatch score: '+ ipl_daily_scoreMap.size +' JSON <'+ JSON.stringify(ipl_daily_scoreMap) +'>');
 
-						    	/*var usersNteamPlayers = iplUsersNTeams.fetchUserAndTeam(conn);
-						    	usersNteamPlayers.forEach(function(userteamDetails){
-						    		dailyUserStats.persistUserMatchScore(conn, userteamDetails, matchId);
-						    	});
+							    //calculate total points for a player
 
-						    	usersNteamPlayers.forEach(function(userteamDetails){
-						    		dailyUserStats.persistUserLeaderBoard(userteamDetails.ipl_users_team_un, matchId,conn);
-						    	});*/
+							    ipl_daily_scoreMap = dailyPlayerStats.calculateTotalPoints(ipl_daily_scoreMap);
+							    req.getConnection(function(err, conn){
+							    	dailyPlayerStats.persistDailyScoreForPlayers(matchId, ipl_daily_scoreMap, conn);
+								});
+
+							    
 								res.set(200).json({"data" : true});
-					// });
+			
 	});
 
 module.exports = matchSummaryRouter;

@@ -55,13 +55,15 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 //app.use(flash()); // use connect-flash for flash messages stored in session
 
-var indexRouter 		= require('./routes/index'),
+var indexRouter 		= require('./routes/index');
 	userRouter			= require('./routes/iplUsers'),
+	userTeamRouter		= require('./routes/iplUserTeam.js');
 	matchSummaryRouter 	= require('./routes/matchSummary'),
 	seedRouter 			= require('./routes/seedTeamsNPlayers');
 
 app.use(indexRouter);
 app.use('/user', userRouter);
+app.use('/team', userTeamRouter);
 app.use('/match', matchSummaryRouter);
 app.use('/seed', seedRouter);
 app.get('*', isLoggedIn, function(req,res){

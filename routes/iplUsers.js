@@ -9,13 +9,12 @@ var express 	= require('express'),
 
 	// process the login form
 	userRouter.post('/login', passport.authenticate('local-login', {
-            successRedirect : '/createTeam', // redirect to the secure profile section
-            failureRedirect : '/login', // redirect back to the signup page if there is an error
+            successRedirect : '/index', // redirect to the secure profile section
+            failureRedirect : '/user/login', // redirect back to the signup page if there is an error
             failureFlash : true // allow flash messages
 		}),
         function(req, res) {
             console.log("hello");
-
             if (req.body.remember) {
               req.session.cookie.maxAge = 1000 * 60 * 3;
             } else {
@@ -45,19 +44,23 @@ var express 	= require('express'),
 	// LOGOUT ==============================
 	// =====================================
 	userRouter.get('/logout', function(req, res) {
-		console.log("inside logout");
 		req.logout();
-		res.redirect('/user/login');
+		res.redirect('/user/ipl/login');
 	});
+
+	//current user details
+	userRouter.get('/currentUser', isLoggedIn, function(req,res){
+		res.contentType('application/json');
+    	res.setHeader("Access-Control-Allow-Origin", "*");
+    	res.json(req.user);
+	})
 
 // route middleware to make sure
 function isLoggedIn(req, res, next) {
-
 	// if user is authenticated in the session, carry on
 	if (req.isAuthenticated()){
 			return next();
 		}
-
 	// if they aren't redirect them to the home page
 	res.redirect('/user/login');
 }

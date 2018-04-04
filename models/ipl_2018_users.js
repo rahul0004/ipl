@@ -29,9 +29,7 @@ module.exports = function(passport) {
     // used to deserialize the user
     passport.deserializeUser(function(username, done) {
         console.log('deserialize user');
-        console.log(username)
         connection.query("SELECT * FROM ipl_2018.ipl_users_cred WHERE ipl_users_cred_username = ? ",[username], function(err, rows){
-            console.log('user found : '+ JSON.stringify(rows[0]));
             done(err, rows[0]);
         });
     });
