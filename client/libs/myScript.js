@@ -2,10 +2,6 @@ var app = angular.module("ipl");
 
 app.controller("listCtrl", function($scope, $http, $window, $timeout, $state, $uibModal, toastr) {
 
-    //console.log("state..", $state);
-    // once user submits the team redirect user to my team page, once team selction date is closed redirect user to my position page 
-    //$state.go('view');
-
     // 58 header + 20 margin, 35 messages 40 footer, 34 sumit line  
     $scope.scrollableHeight = (768 - 78 - 20 - 35 - 40 -34) + 'px';
 
@@ -136,6 +132,13 @@ app.controller("listCtrl", function($scope, $http, $window, $timeout, $state, $u
                 $scope.validateUserTeamCriteria.uncappedPlayers = false;
             } else {
                 $scope.validateUserTeamCriteria.uncappedPlayers = true;                
+            }
+
+
+            if($scope.validateUserTeamCriteria.foreginPlayers && $scope.validateUserTeamCriteria.wicketkeeper && 
+                 $scope.validateUserTeamCriteria.batsmen && $scope.validateUserTeamCriteria.bowlers && 
+                 $scope.validateUserTeamCriteria.allrounders && $scope.validateUserTeamCriteria.uncappedPlayers) {
+                $scope.error = false;
             }
 
             if($scope.error) {
