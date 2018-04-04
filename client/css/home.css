@@ -119,3 +119,32 @@ a {
     right: 35px;
     top: 10px
 }
+
+@media (min-width: 768px)
+.custome_navbar {
+    margin:0;
+}
+
+.custome_navbar {
+    margin:7.5px -15px;
+}
+
+.custome_navbar > li {
+    float:left;
+}
+
+.custome_navbar > li > a {
+    opacity: 0.5;
+    font-weight: bold;
+}
+
+
+.custome_navbar > li > a:hover {
+    opacity: 1;    
+}
+
+
+.active {
+    color:white !important;
+    opacity: 1 !important;
+}
