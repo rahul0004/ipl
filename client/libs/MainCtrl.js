@@ -381,5 +381,22 @@ var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"]
                 return allowToSubmit;
           };
 
+
+          $scope.iplRules = {};
+
+          $scope.getIplRules = function() {
+              $http.get('libs/mockData/rules.htm').then(function onSuccess(response){
+                  $scope.iplRules = response.data.ipl2018Rules;
+              }, function onError(response){
+                  $scope.iplRules = {};
+              });
+          };
+
+          try{
+              $scope.getIplRules();
+          }catch(err){
+              console.log("get all rules ", err);
+          }
+
 });
 

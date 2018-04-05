@@ -1,0 +1,247 @@
+<div>
+	<div class="row">
+		<div class="col-md-12">
+			<h4>Team Selection Rules</h4>
+			<div style="width:100%; padding: 8px;display: -webkit-inline-box;margin-bottom: 10px;">
+				<div style="width:20%;">An Team Needs To Have 11 Players</div>
+				<div style="width:10%;">5 Batsmen</div>
+				<div style="width:10%;">3 Bowlers</div>
+				<div style="width:15%;">1 Wicket-keeper</div>
+				<div style="width:15%;">2 All-Rounders</div>
+				<div style="width:15%;">Not More Than 4 Foreign Players</div>
+				<div style="width:15%;">Atleast 2 Uncapped Players</div> 
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4 shadow" style="min-height: 450px;">
+			<h4>Batting Performance Rules</h4>
+			<table class="table">
+					<tr>
+						<th></th>
+						<th>Rule</th>
+						<th>Points</th>
+					</tr>					
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="For Each Run A Batsman Will Get {{ iplRules.batting.run }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td>Runs Scored</td>
+						<td>{{ iplRules.batting.run}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="For Each Six Hit A Batsman Will Get {{ iplRules.batting.six }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td>Six</td>
+						<td>{{ iplRules.batting.six}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="For Each Four Hit A Batsman Will Get {{ iplRules.batting.four }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td>Four</td>
+						<td>{{ iplRules.batting.four}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Batsman Scores A Half-Century He'll Get {{ iplRules.batting.halfCt }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td>Half-Century</td>
+						<td>{{ iplRules.batting.halfCt}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Batsman Scores A Century He'll Get {{ iplRules.batting.century }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td>Century</td>
+						<td>{{ iplRules.batting.century}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Batsman Scores A Century He'll Get {{ iplRules.batting.century }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td>Century</td>
+						<td>{{ iplRules.batting.century}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Batsman's Strike Rate is Between 140-160 He'll Get {{ iplRules.batting.srt_mt_oneForty }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td>Strike Rate- 140 - 160 </td>
+						<td>{{ iplRules.batting.srt_mt_oneForty}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Batsman's Strike Rate is Between 160-180 He'll Get {{ iplRules.batting.srt_mt_oneSixty }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td>Strike Rate- 160 - 180 </td>
+						<td>{{ iplRules.batting.srt_mt_oneSixty}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Batsman's Strike Rate is Above 180 He'll Get {{ iplRules.batting.srt_mt_oneEighty }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td>Strike Rate > 180 </td>
+						<td>{{ iplRules.batting.srt_mt_oneEighty}}</td>						
+					</tr>
+			</table> 
+		</div>
+		<div class="col-md-4 shadow"  style="min-height: 450px;">
+			<h4>Bowling Performance Rules</h4>
+			<table class="table">
+					<tr>
+						<th></th>
+						<th>Rule</th>
+						<th>Points</th>
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Bowler Takes A Wicket He'll Get {{ iplRules.bowling.wicket }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td> Wicket </td>
+						<td>{{ iplRules.bowling.wicket}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Bowler Bowls A Maiden Over He'll Get {{ iplRules.bowling.maiden }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td> Maiden </td>
+						<td>{{ iplRules.bowling.maiden}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Bowler's Figures Has Economy < 3 He'll Get 
+							{{ iplRules.bowling.eco_Lth_Three }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td> Economy < 3 </td>
+						<td>{{ iplRules.bowling.eco_Lth_Three}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Bowler's Figures Has Economy < 4.5 He'll Get 
+							{{ iplRules.bowling.eco_Lth_Four_pt_Five }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td> Economy < 4.5 </td>
+						<td>{{ iplRules.bowling.eco_Lth_Four_pt_Five}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Bowler's Figures Has Economy < 6 He'll Get 
+							{{ iplRules.bowling.eco_Lth_Six }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td> Economy < 6 </td>
+						<td>{{ iplRules.bowling.eco_Lth_Six}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Bowler's Figures Has 3 Dot Balls He'll Get 
+							{{ iplRules.bowling.mth_three_dot_ball }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td> 3 Dot Balls </td>
+						<td>{{ iplRules.bowling.mth_three_dot_ball}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Bowler Takes An Hat-Trick He'll Get 
+							{{ iplRules.bowling.hat_trick }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td> Hat-Trick </td>
+						<td>{{ iplRules.bowling.hat_trick}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Bowler Takes An 5-Wicket-Haul He'll Get 
+							{{ iplRules.bowling.five_wkt_hall }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td> 5-Wicket-Haul </td>
+						<td>{{ iplRules.bowling.five_wkt_hall}}</td>						
+					</tr>								
+			</table>
+		</div>
+		<div class="col-md-4 shadow"  style="min-height: 450px;">
+			<h4>Other Performance Rules</h4>
+			<table class="table">
+					<tr>
+						<th></th>
+						<th>Rule</th>
+						<th>Points</th>
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Player Was An Man-of-the-match He'll Get 
+							{{ iplRules.fielding.man_of_match }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td> Man-of-the-match </td>
+						<td>{{ iplRules.man_of_match}}</td>						
+					</tr>	
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Player Takes A Catch He'll Get 
+							{{ iplRules.fielding.per_catch }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td> 5-Wicket-Haul </td>
+						<td>{{ iplRules.fielding.per_catch}}</td>						
+					</tr>	
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If A Player Involved In A Run-out He'll Get 
+							{{ iplRules.fielding.run_out }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td> Run-out </td>
+						<td>{{ iplRules.fielding.run_out}}</td>						
+					</tr>
+					<tr>
+						<td>
+							<button type="button" tooltip-placement="right-top" 
+							uib-tooltip="If An Keeper Does A Stumping He'll Get 
+							{{ iplRules.fielding.stumping }} Points."
+							class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-info-sign info-icon" aria-hidden="true"></span></button>
+						</td>
+						<td> Run-out </td>
+						<td>{{ iplRules.fielding.stumping}}</td>						
+					</tr>
+				</table>
+		</div>				
+	</div>
+</div>

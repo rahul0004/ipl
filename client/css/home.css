@@ -148,3 +148,8 @@ a {
     color:white !important;
     opacity: 1 !important;
 }
+
+.info-icon {
+    height: 15px;
+    width: 10px;
+}

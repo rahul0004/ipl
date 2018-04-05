@@ -49,11 +49,14 @@ if possible apply drag and drop shadow effect
                     <li class="nav-item navlinks">
                         <a ng-class="getClass('/view')" class="nav-link " href="javascript:void(0);" ui-sref="view">My Team</a>
                     </li>
+                    <li class="nav-item navlinks"><a ng-class="getClass('/rules')" class="nav-link " href="javascript:void(0);" ui-sref="rules">Rules</a></li>
+                    
                     <li ng-if="currentDate.getTime() > config.lastDateForTeamSelection.getTime()" 
                         class="nav-item navlinks">
                         <a ng-class="getClass('/position')" class="nav-link" href="javascript:void(0);" ui-sref="position"
                         >My Position</a>
-                    </li>                    
+                    </li>
+
                     <li class="nav-item navlinks pull-right" style="margin-right: 10px !important;"><a class="nav-link " href="javascript:void(0);" 
                        ng-click="logout()">Logout</a></li>
                 </ul>                
