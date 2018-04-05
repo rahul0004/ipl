@@ -3,6 +3,7 @@
 	userTeamSchema 	= require('../models/ipl_2018_users_team.js'),
 	iplTeamPlyerbio = require('../models/ipl_2018_players_bio.js');
 
+
 	userTeamRouter.post('/currentUserTeam', function(req, res){
 		console.log(req.body);
 		var userteamPlayersInfo = [];
@@ -51,30 +52,38 @@
 		var loggedInUserDetails = {};
 			loggedInUserDetails.id = req.user.ipl_users_cred_id;
 			loggedInUserDetails.username = req.user.ipl_users_cred_username;
+			loggedInUserDetails.teamMembersId = [];
+			loggedInUserDetails.teamMembers = [];
+			
+			console.log("loggedInUserDetails...",  req.user);
 			//loggedInuserDetails.password = req.user.ipl_users_cred_pwd;			
 		req.getConnection(function(err, conn){
 			userTeamSchema.fetchUserAndTeam(conn, req.user.ipl_users_cred_username, function(err, data){
 				console.log('team object: '+JSON.stringify(data));
-				// callback function,  returned from fetchUserAndTeam
-				userTeamPidDetails.push(data.ipl_users_team_player_one);
-				userTeamPidDetails.push(data.ipl_users_team_player_two);
-				userTeamPidDetails.push(data.ipl_users_team_player_three);
-				userTeamPidDetails.push(data.ipl_users_team_player_four);
-				userTeamPidDetails.push(data.ipl_users_team_player_five);
-				userTeamPidDetails.push(data.ipl_users_team_player_six);
-				userTeamPidDetails.push(data.ipl_users_team_player_seven);
-				userTeamPidDetails.push(data.ipl_users_team_player_eight);
-				userTeamPidDetails.push(data.ipl_users_team_player_nine);
-				userTeamPidDetails.push(data.ipl_users_team_player_ten);
-				userTeamPidDetails.push(data.ipl_users_team_player_eleven);
+				if(data){
+					// callback function,  returned from fetchUserAndTeam				
+					userTeamPidDetails.push(data.ipl_users_team_player_one);
+					userTeamPidDetails.push(data.ipl_users_team_player_two);
+					userTeamPidDetails.push(data.ipl_users_team_player_three);
+					userTeamPidDetails.push(data.ipl_users_team_player_four);
+					userTeamPidDetails.push(data.ipl_users_team_player_five);
+					userTeamPidDetails.push(data.ipl_users_team_player_six);
+					userTeamPidDetails.push(data.ipl_users_team_player_seven);
+					userTeamPidDetails.push(data.ipl_users_team_player_eight);
+					userTeamPidDetails.push(data.ipl_users_team_player_nine);
+					userTeamPidDetails.push(data.ipl_users_team_player_ten);
+					userTeamPidDetails.push(data.ipl_users_team_player_eleven);
+				}
 				loggedInUserDetails.teamMembersId = userTeamPidDetails;
 				console.log("combined team-members id ",userTeamPidDetails); 
 				res.contentType('application/json');
 		    	res.setHeader("Access-Control-Allow-Origin", "*")
+		    	console.log("team available...2",  loggedInUserDetails);
 				res.json(loggedInUserDetails);
 			});
 		
 		});
+			
 		//loggedInUserDetails.teamMembers = userteamPlayersInfo;
 		/*console.log("combined team-members id ",userTeamPidDetails); 
 		res.contentType('application/json');

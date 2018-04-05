@@ -62,7 +62,8 @@ var userTeam = {
 							var userTeamSelectQuery = 'SELECT ipl_users_team_un, ipl_users_team_player_one, ipl_users_team_player_two, ipl_users_team_player_three, ipl_users_team_player_four, ipl_users_team_player_five, ipl_users_team_player_six, ipl_users_team_player_seven, ipl_users_team_player_eight, ipl_users_team_player_nine, ipl_users_team_player_ten, ipl_users_team_player_eleven FROM ipl_2018.ipl_users_team WHERE ipl_users_team_un = ?';
 							conn.query(userTeamSelectQuery,[currentUserName], function(err, rows, fields){
 								if(!err){
-									if(rows.length > 0){
+									
+										console.log("user selected team ", rows[0]);
 										callback(null,rows[0]);
 										/*rows.forEach(function(userTeamFromDB){
 											userNTeam = userTeamFromDB;
@@ -81,9 +82,7 @@ var userTeam = {
 										userTeamPidDetails.push(rows[0].ipl_users_team_player_eleven);
 										console.log("inside row ", userTeamPidDetails);*/
 										//return userTeamPidDetails;
-									}else{
-										console.log('No teams registered for users.');
-									}
+									
 								}else{
 									console.log('Error while selecting user and team details: '+err);
 								}
