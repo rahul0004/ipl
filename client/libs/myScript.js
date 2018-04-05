@@ -20,20 +20,19 @@ app.controller("listCtrl", function($scope, $http, $window, $timeout, $state, $u
         });
 
         modalInstance.result.then(function(){
-            $http.post('/team/currentUserTeam', $scope.loggedInUser).then(function onSuccess(response){
+            if($scope.validateAddedPlayer()) {
+                 $http.post('/team/currentUserTeam', $scope.loggedInUser).then(function onSuccess(response){
                     //console.log("onSuccess ", response);
                     toastr.success('Team is saved successfully', {closeButton: true});
                     $state.go('view');
                 }, function onError(response){
                     console.log("onError ", response);
                     toastr.error('Failed to save the team', 'Error', {closeButton: true});
-                });
-            /*if($scope.validateAddedPlayer()) {
-                
+                });           
             } else {
                 //console.log("show error");
                 toastr.error('Failed to save the team', 'Error', {closeButton: true});
-            }*/
+            }
             
             
         }, function(){
@@ -67,14 +66,10 @@ app.controller("listCtrl", function($scope, $http, $window, $timeout, $state, $u
         $timeout(function(){
             $scope.validateAddedPlayer();
         }, 200);
-        $scope.error = false;
-        $scope.errorMessage = "";
 	};
 	
 	$scope.moved = function(player) {			
-		_.remove($scope.players, {'pid': player.pid});
-        $scope.error = false;
-        $scope.errorMessage = "";        	
+		_.remove($scope.players, {'pid': player.pid});               	
 	}
 
     $scope.dropped = function(item, type) {

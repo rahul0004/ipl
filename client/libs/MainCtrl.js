@@ -215,6 +215,16 @@ var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"]
                 $scope.loggedInUser.teamMembersId.forEach(function(playerId, index, arr) {
                   var playerObj = _.find($scope.players, {'pid':playerId.toString()});
                   $scope.loggedInUser.teamMembers.push(playerObj);
+                  if($scope.isSelectedPlayerIsBatsman(playerObj)) {
+                      //$scope.batsmen.push(selectedPlayer);
+                      _.remove($scope.batsmen, {'pid':playerObj.pid});
+                  } else if($scope.isSelectedPlayerIsBowler(playerObj)) {
+                      //$scope.bowlers.push(selectedPlayer);
+                      _.remove($scope.bowlers, {'pid':playerObj.pid});
+                  } else if($scope.isSelectedPlayerIsAllrounder(playerObj)) {
+                      //$scope.allrounders.push(selectedPlayer);
+                      _.remove($scope.allrounders, {'pid':playerObj.pid});
+                  }
                 });
                 $timeout(function(){
                   $scope.validateAddedPlayer();
