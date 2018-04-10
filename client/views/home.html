@@ -41,6 +41,7 @@ if possible apply drag and drop shadow effect
         <header class="header navbar">
             <div class="navbar-nav-scroll">
                 <ul class="custome_navbar">
+                    <!-- ng-if="currentDate.getTime() < config.lastDateForTeamSelection.getTime()" -->
                     <li ng-if="currentDate.getTime() < config.lastDateForTeamSelection.getTime()"
                      class="nav-item navlinks">
                      <a ng-class="getClass('/add')" class="nav-link " href="javascript:void(0);" ui-sref="add"

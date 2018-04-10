@@ -15,6 +15,10 @@ var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"]
               .state("position", {
                 url:"/position",
                 templateUrl: "views/show-all-users.html"               
+              })
+				.state("rules", {
+                url:"/rules",
+                templateUrl: "views/ipl-rules.html"               
               })              
           });
 
@@ -186,7 +190,7 @@ var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"]
           }
 
           $scope.getUserList = function() {
-              $http.get('libs/mockData/allusers.htm').then(function onSuccess(response){
+              $http.get('team/userSummary').then(function onSuccess(response){
                   $scope.allUsers = response.data;
               }, function onError(response){
                   $scope.allUsers = [];
@@ -241,6 +245,7 @@ var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"]
             //user can not add or modify team from now
             // below logic is whenever user comes on team selection page redirect user to view team page 
             $state.go('view');
+            // $state.go('position');
           } else {
             $state.go('add');
           }

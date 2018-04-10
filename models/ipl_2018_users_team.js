@@ -1,4 +1,7 @@
-var dateTime 		= require('node-datetime');
+var dateTime 		= require('node-datetime'),
+	mySql 			= require('promise-mysql'),
+	config 			= require('../config.js');
+
 
 var userTeam = {
 	 userNTeam 	: {
@@ -88,9 +91,23 @@ var userTeam = {
 								}
 							});
 							// return userTeamPidDetails;cls
-
+						},
+	fetchAllUsersTeam	: function(){
+							console.log('===> In method fetchAllUsersTeam for user score');
+						return new Promise(function(resolve, reject){
+							var conn = mySql.createConnection(
+											config.database
+								);
+							var userNteamINdb = [];
+							conn.then(function(conn){
+								var selectUsersNTeam = 'SELECT * FROM ipl_2018.ipl_users_team';
+								return userNteamINdb = conn.query(selectUsersNTeam);
+							}).then(function(rows){
+								resolve(rows);
+							});
+						});
+							
 						}
-
 
 }
 

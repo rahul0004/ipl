@@ -13,6 +13,7 @@ var express 		= require('express'),
 	rp 				= require('request-promise'),
 	dateTime 		= require('node-datetime'),
 	fs 				= require('fs'),
+	port 			= config.server.port,
 	iplTeams 		= require('./models/ipl_2018_Teams.js');
 
 //console.log(config.database);
@@ -56,7 +57,7 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-var indexRouter 		= require('./routes/index');
+var indexRouter 		= require('./routes/index'),
 	userRouter			= require('./routes/iplUsers'),
 	userTeamRouter		= require('./routes/iplUserTeam.js');
 	matchSummaryRouter 	= require('./routes/matchSummary'),
@@ -80,6 +81,6 @@ function isLoggedIn(req, res, next) {
 	// if they aren't redirect them to the home page
 	res.redirect('/user/login');
 }
-app.listen(3000, function(req,res){
-	console.log('ipl server started at port 3000');
+app.listen(port, function(req,res){
+	console.log('ipl server started at port ',port);
 });

@@ -1,7 +1,10 @@
 	var express 	= require('express'),
+		mysql 		= require('promise-mysql'),
+		config 		= require('../config.js'),
 	userTeamRouter 	= express.Router({mergeParams : true}),
 	userTeamSchema 	= require('../models/ipl_2018_users_team.js'),
-	iplTeamPlyerbio = require('../models/ipl_2018_players_bio.js');
+	iplTeamPlyerbio = require('../models/ipl_2018_players_bio.js'),
+	userScoreSchema = require('../models/ipl_2018_user_scores_engine.js');
 
 
 	userTeamRouter.post('/currentUserTeam', function(req, res){
@@ -98,5 +101,48 @@
     	res.setHeader("Access-Control-Allow-Origin", "*")
 		res.json(playersPidArr);
 	});
+
+	userTeamRouter.get('/userSummary', function(req,res){
+		Promise.resolve(userScoreSchema.userLeaderBoardSummary()).then(function(usersScoresArray){
+			res.contentType('application/json');
+	    	res.setHeader("Access-Control-Allow-Origin", "*")
+			res.json(usersScoresArray);
+		});
+		
+	});
+	
+	// 	test method written for working of promise-mysql for synchrous operations.
+	/*userTeamRouter.get('/getUserTeams', function(req, res){
+		var userteamPlayersInfo = [];
+		var conn = mysql.createConnection(
+			config.database
+		);
+
+		var usernames = req.query.username.split(",");
+		var totalteams = []
+
+		conn.then(function(conn){
+			var userTeam = "SELECT * FROM ipl_2018.ipl_users_team WHERE ipl_users_team_un = ?";
+			var rows = conn.query(userTeam, [usernames[0]]);
+			return rows;
+		}).then(function(rows){
+			console.log('team details: '+JSON.stringify(rows));
+			totalteams.push(rows);
+			return conn;
+			res.contentType('application/json');
+    		res.setHeader("Access-Control-Allow-Origin", "*")
+			res.json(rows);
+		}).then(function(conn){
+			var userTeam = "SELECT * FROM ipl_2018.ipl_users_team WHERE ipl_users_team_un = ?";
+			var rows = conn.query(userTeam, [usernames[1]]);
+			conn.end();
+			return rows;
+		}).then(function(rows){
+			console.log('team details: '+JSON.stringify(rows));
+			totalteams.push(rows);
+			res.contentType('application/json');
+    		res.setHeader("Access-Control-Allow-Origin", "*")
+			res.json(totalteams);
+		});*/
 
 module.exports = userTeamRouter;

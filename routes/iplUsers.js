@@ -45,7 +45,7 @@ var express 	= require('express'),
 	// =====================================
 	userRouter.get('/logout', function(req, res) {
 		req.logout();
-		res.redirect('/user/ipl/login');
+		res.redirect('/user/login');
 	});
 
 	//current user details

@@ -35,18 +35,18 @@ var dailyStats = {
  										}*/
  										batting.attr.sixScored  = parseInt(battingScore["6s"]) * iplRulesConst.iplRules.batting.six;
  										batting.attr.fourScored = parseInt(battingScore["4s"]) * iplRulesConst.iplRules.batting.four;
- 										if( batting.attr.runsScored >= iplRulesConst.iplRules.batting.runsValue.centuryRuns ){
+ 										if( battingRuns >= iplRulesConst.iplRules.batting.runsValue.centuryRuns ){
  											batting.attr.century = iplRulesConst.iplRules.batting.century;
- 										}else if( batting.attr.runsScored >= iplRulesConst.iplRules.batting.runsValue.halfCenturyRuns ){
- 											batting.attr.century = iplRulesConst.iplRules.batting.halfCt
+ 										}else if( battingRuns >= iplRulesConst.iplRules.batting.runsValue.halfCenturyRuns ){
+ 											batting.attr.century = iplRulesConst.iplRules.batting.halfCt;
  										}
  										console.log('battingRuns: '+battingRuns + ' and min strRateRuns '+ iplRulesConst.iplRules.batting.minRunsForSrt);
  										if( battingRuns > iplRulesConst.iplRules.batting.minRunsForSrt){
- 											var battingSrt = parseInt(battingScore["SR"]);
- 											/*console.log('strike rate: '+ battingSrt);
+ 											var battingSrt = parseFloat(battingScore["SR"]);
+ 											console.log('strike rate: '+ battingSrt);
  											console.log('Rules for strike rate >180: '+ iplRulesConst.iplRules.batting.srtValue.srtOneEighty);
  											console.log('Rules for strike rate >160: '+ iplRulesConst.iplRules.batting.srtValue.srtOneSixty);
- 											console.log('Rules for strike rate >140: '+ iplRulesConst.iplRules.batting.srtValue.srtOneForty);*/
+ 											console.log('Rules for strike rate >140: '+ iplRulesConst.iplRules.batting.srtValue.srtOneForty);
  											if( battingSrt >= iplRulesConst.iplRules.batting.srtValue.srtOneEighty ){
  													console.log('strike rate: '+ battingSrt);
 													batting.attr.strikeRate = iplRulesConst.iplRules.batting.srt_mt_oneEighty;
@@ -79,8 +79,8 @@ var dailyStats = {
 											// console.log('wicket: '+bowling.attr.wicket);
 											bowling.attr.maiden = parseInt(bowlingScore["M"]) * iplRulesConst.iplRules.bowling.maiden;
 											// console.log('maiden: '+bowling.attr.maiden);
-											var bowlingEcon = parseInt(bowlingScore["Econ"]);
-											// console.log('bowlingEcon: '+bowlingEcon);
+											var bowlingEcon = parseFloat(bowlingScore["Econ"]);
+											console.log('bowlingEcon: '+bowlingEcon);
 												if( bowlingEcon < iplRulesConst.iplRules.bowling.econValue.econValueThree ){
 													bowling.attr.economyRate = iplRulesConst.iplRules.bowling.eco_Lth_Three;
 												} else if( bowlingEcon > iplRulesConst.iplRules.bowling.econValue.econValueThree && 
@@ -150,9 +150,12 @@ var dailyStats = {
 								for(eachKey =0; eachKey < mapKeysLength; eachKey++){
 									var playerIdKey  = parseInt(playerIdsFromMapStoredAsKeys.next().value);
 									var ipl_daily_score = iplDailyScoreMap.get(playerIdKey);
-									var totalScore = parseInt(ipl_daily_score.ipl_daily_score_fielding)  + parseInt(ipl_daily_score.ipl_daily_score_bowling) 
+									/*var totalScore = parseInt(ipl_daily_score.ipl_daily_score_fielding)  + parseInt(ipl_daily_score.ipl_daily_score_bowling) 
 															+ parseInt(ipl_daily_score.ipl_daily_score_batting) + parseInt(ipl_daily_score.ipl_daily_score_mom);
-									ipl_daily_score.ipl_daily_score_total_points = parseInt(totalScore);
+									ipl_daily_score.ipl_daily_score_total_points = parseInt(totalScore);*/
+									var totalScore = ipl_daily_score.ipl_daily_score_fielding  + ipl_daily_score.ipl_daily_score_bowling
+															+ ipl_daily_score.ipl_daily_score_batting + ipl_daily_score.ipl_daily_score_mom;
+									ipl_daily_score.ipl_daily_score_total_points = totalScore;
 									iplDailyScoreMap.set(playerIdKey, ipl_daily_score);
 								}
 								return iplDailyScoreMap;
