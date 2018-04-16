@@ -18,11 +18,16 @@ var userLeaderBoardScores = {
 										// var username = 'sandeep.mohan.kumar';
 										console.log('Processing leaderboard for user '+username);
 										conn.then(function(conn){
-											var updateScoreType = 'UPDATE ipl_2018.ipl_user_scores SET ipl_user_scores_type = ? WHERE ipl_user_scores_un IS NOT NULL';
-											conn.query(updateScoreType,[{ipl_user_scores_type:'A'}]);
+											console.log('About to archive existing match type');
+											var updateScoreType = 'UPDATE '+config.database.db+'.ipl_user_scores SET ipl_user_scores_type = \'A\' WHERE ipl_user_scores_un IS NOT NULL AND ipl_user_scores_type = \'L\'';
+											// var results = conn.query(updateScoreType,[{ipl_user_scores_type:'A'}]);
+											var results = conn.query(updateScoreType);
+											return results;
+										}).then(function(rows){
+											console.log('Archived the last matches score for user: '+username);
 											return conn;
 										}).then(function(conn){
-											var selectUserScoreForAllmacthes = 'SELECT sum(ipl_user_daily_score_total_points) as user_total_points FROM ipl_2018.ipl_user_daily_score WHERE ipl_user_daily_score_un = \''+username+'\'';
+											var selectUserScoreForAllmacthes = 'SELECT sum(ipl_user_daily_score_total_points) as user_total_points FROM '+config.database.db+'.ipl_user_daily_score WHERE ipl_user_daily_score_un = \''+username+'\'';
 											console.log('Select max score : '+ selectUserScoreForAllmacthes);
 											var rows = conn.query(selectUserScoreForAllmacthes);
 											return rows;
@@ -45,7 +50,7 @@ var userLeaderBoardScores = {
 										}).then(function(conn){
 											console.log('About to insert leader board score for user '+ JSON.stringify(ipl_user_scores));
 											// console.log('Max score for user '+ username +' is < '+ JSON.stringify(rows) +' >');
-											var insertLeaderBoard = 'INSERT INTO ipl_2018.ipl_user_scores(ipl_user_scores_un, ipl_user_scores_score, ipl_user_scores_match_id, ipl_user_scores_type, ipl_user_scores_tstamp) VALUES (?,?,?,?,?)';
+											var insertLeaderBoard = 'INSERT INTO '+config.database.db+'.ipl_user_scores(ipl_user_scores_un, ipl_user_scores_score, ipl_user_scores_match_id, ipl_user_scores_type, ipl_user_scores_tstamp) VALUES (?,?,?,?,?)';
 											var results = conn.query(insertLeaderBoard, [ipl_user_scores.ipl_user_scores_un,ipl_user_scores.ipl_user_scores_score,ipl_user_scores.ipl_user_scores_match_id,ipl_user_scores.ipl_user_scores_type,ipl_user_scores.ipl_user_scores_tstamp]);
 											return results;
 										}).then(function(results){
@@ -69,7 +74,7 @@ var userLeaderBoardScores = {
 												config.database
 											);
 											conn.then(function(conn){
-												var selectUserScoreForAllmacthes = 'SELECT uc.ipl_users_cred_id as user_id, uc.ipl_users_cred_name as user_name, us.ipl_user_scores_score as user_score FROM ipl_2018.ipl_user_scores us, ipl_2018.ipl_users_cred uc WHERE uc.ipl_users_cred_username = us.ipl_user_scores_un AND us.ipl_user_scores_type = \'L\' ORDER BY user_score desc;';
+												var selectUserScoreForAllmacthes = 'SELECT uc.ipl_users_cred_id as user_id, uc.ipl_users_cred_name as user_name, us.ipl_user_scores_score as user_score FROM '+config.database.db+'.ipl_user_scores us, ipl_2018.ipl_users_cred uc WHERE uc.ipl_users_cred_username = us.ipl_user_scores_un AND us.ipl_user_scores_type = \'L\' ORDER BY user_score desc;';
 												console.log('Select max score : '+ selectUserScoreForAllmacthes);
 												var rows = conn.query(selectUserScoreForAllmacthes);
 												return rows;

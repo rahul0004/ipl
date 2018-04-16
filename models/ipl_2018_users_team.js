@@ -107,6 +107,22 @@ var userTeam = {
 							});
 						});
 							
+						},
+	pointsForTeamMembers: function(userTeam, username, conn, callback){
+							console.log('About to fetch points for players');
+							var inClause = userTeam.ipl_users_team_player_one + ',' + userTeam.ipl_users_team_player_two + ',' + userTeam.ipl_users_team_player_three + ',' + userTeam.ipl_users_team_player_four + ',' + userTeam.ipl_users_team_player_five + ',' + userTeam.ipl_users_team_player_six + ',' + userTeam.ipl_users_team_player_seven + ',' + userTeam.ipl_users_team_player_eight + ',' + userTeam.ipl_users_team_player_nine + ',' + userTeam.ipl_users_team_player_ten + ',' + userTeam.ipl_users_team_player_eleven;
+							// console.log('user team details: '+ inClause);
+							var selectQuery = 'SELECT sum(ds.ipl_daily_score_total_points) as playerPoints, ds.ipl_daily_score_player_id as player_id FROM ipl_2018.ipl_daily_score ds, ipl_2018.ipl_users_team ut WHERE ut.ipl_users_team_un = \''+username+'\' AND ds.ipl_daily_score_player_id IN ('+ inClause +') GROUP BY player_id';
+							console.log('user team details: '+ selectQuery);
+							conn.query(selectQuery, function(err, rows, fields){
+								if(!err){
+										console.log("points for every player ", JSON.stringify(rows));
+										callback(null,rows);
+									
+								}else{
+									console.log('Error while selecting user and team details: '+err);
+								}
+							});
 						}
 
 }

@@ -205,6 +205,7 @@ var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"]
 
           $scope.loggedInUser = {
             id:0,
+            name: '',
             username: '',            
             teamMembersId: [],
             teamMembers:[]
@@ -214,10 +215,12 @@ var app = angular.module("ipl", ["ui.router","dndLists","ui.bootstrap","toastr"]
             $http.get('/team/getUserTeam').then(function onSuccess(response){
                 //$scope.loggedInUser = response.data;
                 $scope.loggedInUser.id = response.data.id;
+                $scope.loggedInUser.name = response.data.name;
                 $scope.loggedInUser.username = response.data.username;
                 $scope.loggedInUser.teamMembersId = response.data.teamMembersId;
                 $scope.loggedInUser.teamMembersId.forEach(function(playerId, index, arr) {
-                  var playerObj = _.find($scope.players, {'pid':playerId.toString()});
+                  var playerObj = _.find($scope.players, {'pid':playerId._pid.toString()});
+                  playerObj.pointsScored = playerId._points;
                   $scope.loggedInUser.teamMembers.push(playerObj);
                   if($scope.isSelectedPlayerIsBatsman(playerObj)) {
                       //$scope.batsmen.push(selectedPlayer);

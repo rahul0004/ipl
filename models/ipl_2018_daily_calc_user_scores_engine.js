@@ -14,7 +14,7 @@ var userDailyStats = {
 								// userTeamDetails.forEach(function(userTeam){
 									var ipl_user_daily_score = {};
 									var inClause = userTeam.ipl_users_team_player_one + ',' + userTeam.ipl_users_team_player_two + ',' + userTeam.ipl_users_team_player_three + ',' + userTeam.ipl_users_team_player_four + ',' + userTeam.ipl_users_team_player_five + ',' + userTeam.ipl_users_team_player_six + ',' + userTeam.ipl_users_team_player_seven + ',' + userTeam.ipl_users_team_player_eight + ',' + userTeam.ipl_users_team_player_nine + ',' + userTeam.ipl_users_team_player_ten + ',' + userTeam.ipl_users_team_player_eleven;
-									var totalUserScoreSelectQuery = 'SELECT sum(ipl_daily_score_total_points) AS user_total_score FROM ipl_2018.ipl_daily_score ds WHERE ds.ipl_daily_score_match_id = '+ matchId + ' AND ds.ipl_daily_score_player_id IN ( ' + inClause + ') ';
+									var totalUserScoreSelectQuery = 'SELECT sum(ipl_daily_score_total_points) AS user_total_score FROM '+config.database.db+'.ipl_daily_score ds WHERE ds.ipl_daily_score_match_id = '+ matchId + ' AND ds.ipl_daily_score_player_id IN ( ' + inClause + ') ';
 									console.log('Query to select scores for the user: '+ totalUserScoreSelectQuery);
 									conn.then(function(conn){
 										var rows = conn.query(totalUserScoreSelectQuery);
@@ -34,7 +34,7 @@ var userDailyStats = {
 									}).then(function(conn){
 											
 											console.log('Inserting daily match total score for user ' + ipl_user_daily_score.ipl_user_daily_score_un + ' for matchid '+ ipl_user_daily_score.ipl_user_daily_score_match_id);
-											var insertSQL = 'INSERT INTO ipl_2018.ipl_user_daily_score(ipl_user_daily_score_match_id, ipl_user_daily_score_un, ipl_user_daily_score_total_points, ipl_user_daily_score_tstamp) VALUES (?,?,?,?)';
+											var insertSQL = 'INSERT INTO '+config.database.db+'.ipl_user_daily_score(ipl_user_daily_score_match_id, ipl_user_daily_score_un, ipl_user_daily_score_total_points, ipl_user_daily_score_tstamp) VALUES (?,?,?,?)';
 											console.log('values for insert query '+ JSON.stringify(ipl_user_daily_score));
 											try{
 												var results  = conn.query(insertSQL,[ipl_user_daily_score.ipl_user_daily_score_match_id, ipl_user_daily_score.ipl_user_daily_score_un, ipl_user_daily_score.ipl_user_daily_score_total_points, ipl_user_daily_score.ipl_user_daily_score_tstamp]);
