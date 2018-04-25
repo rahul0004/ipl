@@ -29,6 +29,7 @@
     <script src="libs/UserPositionCtrl.js"></script>    
     <script src="libs/RemovePlayerModalCtrl.js"></script>        
     <script src="libs/SubmitTeamModalCtrl.js"></script>
+    <script src="libs/matchLeaderBoardCtrl.js"></script>
     <base href="/" />    
 </head>
 <!-- 
@@ -56,6 +57,7 @@ if possible apply drag and drop shadow effect
                         class="nav-item navlinks">
                         <a ng-class="getClass('/position')" class="nav-link" href="javascript:void(0);" ui-sref="position"
                         >My Position</a>
+                        <span class="badge">{{ loggedInUser.position }}</span>
                     </li>
 
                     <li class="nav-item navlinks pull-right" style="margin-right: 10px !important;">
@@ -71,7 +73,6 @@ if possible apply drag and drop shadow effect
         <footer class="footer">
             <div>Accenture Life Insurance & Annuity Platform (ALIP).</div>
         </footer>        
-    </dir>
-
+    </div>
 </body>
 </html>

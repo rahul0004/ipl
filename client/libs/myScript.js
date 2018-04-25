@@ -70,7 +70,7 @@ app.controller("listCtrl", function($scope, $http, $window, $timeout, $state, $u
 	
 	$scope.moved = function(player) {			
 		_.remove($scope.players, {'pid': player.pid});               	
-	}
+	};
 
     $scope.dropped = function(item, type) {
         /*
@@ -89,7 +89,7 @@ app.controller("listCtrl", function($scope, $http, $window, $timeout, $state, $u
             $scope.validateAddedPlayer();
         }, 200);
         return item;
-    }
+    };
 
 
     $scope.removeConfirmation = function(selectedTeamMember, $index) {
@@ -133,7 +133,7 @@ app.controller("listCtrl", function($scope, $http, $window, $timeout, $state, $u
             status = $scope.validateUserTeamCriteria.allrounders;
         }
         return status; 
-    }
+    };
     
     /*try{
          $scope.validateAddedPlayer();        

@@ -101,6 +101,43 @@ var userLeaderBoardScores = {
 									});
 
 
+								},
+	matchLeaderBoardSummary		: function(matchId){
+									console.log('====> In method matchLeaderBoardSummary ');
+									// console.log('====> In method persistUserLeaderBoard with userdeatils : '+JSON.stringify(userDetails));
+									
+										return new Promise(function(resolve, reject){
+											var conn = mySql.createConnection(
+												config.database
+											);
+											conn.then(function(conn){
+												var selectUserScoreForAmatch = 'SELECT uc.ipl_users_cred_id as user_id, uc.ipl_users_cred_name as user_name, us.ipl_user_scores_score as user_score FROM '+config.database.db+'.ipl_user_scores us, ipl_2018.ipl_users_cred uc WHERE uc.ipl_users_cred_username = us.ipl_user_scores_un AND us.ipl_user_scores_match_id = \''+matchId+'\' ORDER BY user_score desc;';
+												console.log('Select max score : '+ selectUserScoreForAmatch);
+												var rows = conn.query(selectUserScoreForAmatch);
+												return rows;
+										}).then(function(rows){
+											// console.log('Rows returned: '+ JSON.stringify(rows));
+											var usersScoresArray = [];
+												rows.forEach(function(row){
+													console.log('Every row',JSON.stringify(row));
+													var userSummaryDetails = {};
+													userSummaryDetails.id 			= row.user_id;
+													userSummaryDetails.email 		= row.user_name;
+													userSummaryDetails.points 		= row.user_score;
+													userSummaryDetails.teamMembers  = [];
+													usersScoresArray.push(userSummaryDetails);
+												});
+												return usersScoresArray;
+										}).then(function(usersArray){
+												// console.log('Rows converted: '+ JSON.stringify(usersArray));
+											return resolve(usersArray);
+										}).catch(function(err){
+												console.log(err);
+												throw err;
+										});
+									});
+
+
 								}
 }
 

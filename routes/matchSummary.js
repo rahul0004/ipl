@@ -152,4 +152,13 @@ var express 				= require('express'),
 						
 	});
 
+	matchSummaryRouter.get('/matchLeaderBoard/:matchId', function(req,res){
+		Promise.resolve(userLeaderBoard.matchLeaderBoardSummary(req.params.matchId)).then(function(usersScoresArray){
+			res.contentType('application/json');
+	    	res.setHeader("Access-Control-Allow-Origin", "*")
+			res.json(usersScoresArray);
+		});
+		
+	});
+
 module.exports = matchSummaryRouter;

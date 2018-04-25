@@ -1,6 +1,6 @@
 var app = angular.module('ipl');
 
-app.controller('UserPositionCtrl', function($scope, $http, $location, $anchorScroll, $timeout, $filter){
+app.controller('UserPositionCtrl', function($scope, $http, $location,$uibModal, $anchorScroll, $timeout, $filter){
 	
 	//$scope.allUsers = $scope.allUsers.sort(function(a, b){return b-a});
 
@@ -13,8 +13,16 @@ app.controller('UserPositionCtrl', function($scope, $http, $location, $anchorScr
 
 	$scope.allUsers.forEach(function(value, index, arr){
 		if(index < ($scope.allUsers.length / 2) ) {
+			value.position = index + 1;
+			if($scope.loggedInUser.id === value.id){
+				$scope.loggedInUser.position = value.position;
+			}
 			$scope.topHalfMembers.push(value);
 		} else {
+			value.position = index + 1;
+			if($scope.loggedInUser.id === value.id){
+				$scope.loggedInUser.position = value.position;
+			}
 			$scope.bottomHalfMembers.push(value);
 		}
 		$location.hash("user_"+$scope.loggedInUser.id);
@@ -103,6 +111,33 @@ app.controller('UserPositionCtrl', function($scope, $http, $location, $anchorScr
 	  }catch(err){
 	      console.log("get all upcomingMatches ", err);
 	  }
+
+	  $scope.currentMatchLeaderBoard = function(matchId) {
+        var matchLeaderBoardUrl = 'match/matchLeaderBoard/'+matchId;
+                $http.get(matchLeaderBoardUrl).then(function onSuccess(response){
+                          var modalInstance = $uibModal.open({
+                    templateUrl:'views/match-leaderBoard-popup.html',
+                    controller:'matchLeaderBoardCtrl',
+                    size:'lg',
+                    resolve: {
+                        userLeaderBoardDetails : function(){
+                        	response.loggedInUserDetails = $scope.loggedInUser;
+                            return response;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function(matchIdDetails){
+                    toastr.success('Match leaderbaord viewed successfully', {closeButton: true});
+                }, function(){
+                    //console.log('modal is dismissed');
+                });
+              }, function onError(response){
+                    console.log("onError ", response);
+                    toastr.error('Failed to load leaderboard for match', 'Error', {closeButton: true});  
+              });
+        
+    };
 		
 	  /*$scope.buildMockData = function() {
 	  	var data = [];
